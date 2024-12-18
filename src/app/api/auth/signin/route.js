@@ -35,8 +35,15 @@ export async function POST(req) {
     const token = generateToken(email);
 
     return new Response(
-      JSON.stringify({ message: 'Login successful', token }),
-      { status: 200 }
+      JSON.stringify({
+        message: 'Login successful',
+        user: {
+          name: user.name,
+          email: user.email,
+        },
+        token,
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error(error); // Log error to the server console

@@ -4,7 +4,7 @@ import { hashPassword, createUser, generateToken, getUserByEmail } from '../../.
 
 export async function POST(req) {
   try {
-    const { email, password } = await req.json();
+    const {name, email, password, role } = await req.json();
 
     if (!email || !password) {
       return new Response(
@@ -26,7 +26,7 @@ export async function POST(req) {
     const hashedPassword = await hashPassword(password);
 
     // Create new user
-    await createUser(email, hashedPassword);
+    await createUser(name, email, hashedPassword, role);
 
     // Generate JWT token
     const token = generateToken(email);
