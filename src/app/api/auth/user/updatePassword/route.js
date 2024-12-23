@@ -2,9 +2,9 @@ import { updatePassword } from "../../../../../../lib/auth";
 
 export async function POST(req) {
     try {
-        const { email, token, newPassword } = await req.json();
+        const { token, newPassword } = await req.json();
     
-        const result = await updatePassword(email, token, newPassword);
+        const result = await updatePassword(token, newPassword);
     
         if (result.success) {
           return new Response(

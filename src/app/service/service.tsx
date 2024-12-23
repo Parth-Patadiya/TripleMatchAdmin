@@ -2,7 +2,9 @@ import {
   adminSignInRoute,
   deleteUserRoute,
   editUserRoute,
+  forgotUserPasswordRoute,
   getAllUserRoute,
+  validateTokenRoute,
 } from "./backendRoutes";
 
 export const adminSignIn = async (email: string, password: string) => {
@@ -75,6 +77,44 @@ export const editUserById = async (user: object) => {
     return data;
   } catch (error) {
     console.error("editUserById" + " Error" + error);
+  }
+  return null;
+};
+
+export const validateResetToken = async (user: object) => {
+  try {
+    const response = await fetch(validateTokenRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...user,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("validateResetToken" + " Error" + error);
+  }
+  return null;
+};
+
+export const forgotUserPassword = async (user: object) => {
+  try {
+    const response = await fetch(forgotUserPasswordRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...user,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("forgotUserPassword" + " Error" + error);
   }
   return null;
 };
