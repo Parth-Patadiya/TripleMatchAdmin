@@ -1,6 +1,4 @@
-// src/app/api/auth/signin/route.js
-
-import { comparePasswords, generateToken, getUserByEmail } from '../../../../../lib/auth';
+import { comparePasswords, generateToken, getUserByEmail } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
@@ -8,17 +6,17 @@ export async function POST(req) {
 
     if (!email || !password) {
       return new Response(
-        JSON.stringify({ message: 'Email and password are required' }),
-        { status: 400 }
+        JSON.stringify({ status: 0, message: 'Email and password are required' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Find the user by email
+    // Find the User by email
     const user = await getUserByEmail(email);
     if (!user) {
       return new Response(
-        JSON.stringify({ message: 'Invalid credentials' }),
-        { status: 400 }
+        JSON.stringify({ status: 0, message: 'Invalid credentials' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
@@ -26,8 +24,8 @@ export async function POST(req) {
     const isMatch = await comparePasswords(password, user.password);
     if (!isMatch) {
       return new Response(
-        JSON.stringify({ message: 'Invalid credentials' }),
-        { status: 400 }
+        JSON.stringify({ status: 0, message: 'Invalid credentials' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
@@ -42,14 +40,15 @@ export async function POST(req) {
           email: user.email,
         },
         token,
+        status: 1
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error(error); // Log error to the server console
     return new Response(
-      JSON.stringify({ message: 'Internal server error' }),
-      { status: 500 }
+      JSON.stringify({ status: 0, message: 'Internal server error' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' }  }
     );
   }
 }
