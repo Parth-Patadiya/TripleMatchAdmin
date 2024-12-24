@@ -1,35 +1,44 @@
 import {
   deleteUserById,
+  deleteVoucherById,
   editUserById,
   getAllUsers,
+  getAllVoucher,
+  updateVoucher,
 } from "@/app/service/service";
 import { useEffect, useState } from "react";
 import Loader from "../common/Loader";
-import { User } from "@/types/user";
 import {
   RemoveRedEyeOutlined,
   DeleteOutlined,
   EditOutlined,
 } from "@mui/icons-material";
+import { Voucher } from "@/types/voucher";
 
-const UserTable = () => {
-  const [formValues, setFormValues] = useState<Record<string, string>>({
-    name: "",
-    email: "",
-    mobile: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({
-    name: "",
-    email: "",
-    mobile: "",
-  });
+const VoucherTable = () => {
+  const formData = new FormData();
   const [isLoading, setLoading] = useState(false);
+  const [formValues, setFormValues] = useState<Record<string, string>>({
+    title: "",
+    des: "",
+    validTill: "",
+    amount: "",
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({
+    title: "",
+    des: "",
+    validTill: "",
+    amount: "",
+  });
+  const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [currentPage, setCurrentPage] = useState(1); // Track the current page
   const [totalPages, setTotalPages] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+  const [updatedImage, setUpdatedImage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,14 +48,17 @@ const UserTable = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formValues.name) {
-      newErrors.name = "Name is required";
+    if (!formValues.title) {
+      newErrors.title = "Title is required";
     }
-    if (!formValues.email) {
-      newErrors.email = "Email is required";
+    if (!formValues.des) {
+      newErrors.des = "Description is required";
     }
-    if (!formValues.mobile) {
-      newErrors.mobile = "Mobile is required";
+    if (!formValues.validTill) {
+      newErrors.validTill = "Date is required";
+    }
+    if (!formValues.amount) {
+      newErrors.amount = "Amount is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,13 +71,13 @@ const UserTable = () => {
     }
   };
 
-  const handleUser = async () => {
+  const fetchVoucher = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getAllUsers(currentPage); // Pass page and limit to API
+      const data = await getAllVoucher(currentPage); // Pass page and limit to API
       if (data && data.status === 1) {
-        setUsers(data.users);
+        setVouchers(data.vouchers);
         setTotalPages(data.pagination.totalPages);
         setLoading(false);
       } else {
@@ -78,13 +90,13 @@ const UserTable = () => {
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
+  const handleDeleteVoucher = async (voucherId: string) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await deleteUserById(userId); // Pass page and limit to API
+      const data = await deleteVoucherById(voucherId); // Pass page and limit to API
       if (data && data.status === 1) {
-        handleUser();
+        fetchVoucher();
         setLoading(false);
       } else {
         setLoading(false);
@@ -96,40 +108,45 @@ const UserTable = () => {
     }
   };
 
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setFormValues((prev) => ({ ...prev, name: user.name }));
-    setFormValues((prev) => ({ ...prev, email: user.email }));
-    setFormValues((prev) => ({ ...prev, mobile: user.mobile }));
+  const handleEditVoucher = (voucher: Voucher) => {
+    setSelectedVoucher(voucher);
+    setUpdatedImage(voucher.image);
+    setFormValues((prev) => ({ ...prev, title: voucher.title }));
+    setFormValues((prev) => ({ ...prev, des: voucher.description }));
+    setFormValues((prev) => ({ ...prev, validTill: voucher.validTill }));
+    setFormValues((prev) => ({ ...prev, amount: voucher.amount }));
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedUser(null);
+    setSelectedVoucher(null);
   };
 
   const handleSaveChanges = async () => {
-    if (selectedUser) {
+    if (selectedVoucher) {
       // Simulate an API call to update user
-      setLoading(true);
-      setError(null);
+      // setLoading(true);
+      // setError(null);
       try {
-        const data = await editUserById({
-          userId: selectedUser._id,
-          name: formValues.name,
-          email: formValues.email,
-          mobile: formValues.mobile,
-        }); // Pass page and limit to API
+        formData.set("voucherId", selectedVoucher._id);
+        formData.set("title", formValues.title);
+        formData.set("description", formValues.des);
+        formData.set("validTill", formValues.validTill);
+        formData.set("amount", formValues.amount);
+        image && formData.set("image", image); // Add to FormData
+
+        const data = await updateVoucher(formData); // Pass page and limit to API
         if (data && data.status === 1) {
-          handleUser();
+          fetchVoucher();
+          // setLoading(false);
         } else {
+          // setLoading(false);
           setError(data.message);
         }
       } catch (err) {
+        // setLoading(false);
         setError(err as string);
-      } finally {
-        setLoading(false);
       }
       closeModal();
     }
@@ -141,7 +158,7 @@ const UserTable = () => {
   };
 
   useEffect(() => {
-    handleUser();
+    fetchVoucher();
   }, [currentPage]); // Re-fetch when page or itemsPerPage changes
 
   return (
@@ -155,10 +172,10 @@ const UserTable = () => {
                   Name
                 </th>
                 <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  Email
+                  Expire Date
                 </th>
                 <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                  Mobile
+                  Amount
                 </th>
                 <th className="px-4 py-4 font-medium text-black dark:text-white">
                   Actions
@@ -173,22 +190,37 @@ const UserTable = () => {
                   </td>
                 </tr>
               ) : (
-                users &&
-                users.length > 0 &&
-                users.map((user, key) => (
+                vouchers &&
+                vouchers.length > 0 &&
+                vouchers.map((voucher, key) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                      <h5 className="font-medium text-black dark:text-white">
-                        {user.name}
-                      </h5>
-                      <p className="text-sm">$ 0</p>
-                    </td>
-                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                      <p className="text-black dark:text-white">{user.email}</p>
+                      <div className="flex items-start space-x-4">
+                        <img
+                          src={voucher.image}
+                          alt="Voucher"
+                          className="h-10 w-10 rounded-lg object-cover"
+                        />
+                        <div>
+                          <h5 className="font-medium text-black dark:text-white">
+                            {voucher.title}
+                          </h5>
+                          <p className="text-sm">{voucher.description}</p>
+                        </div>
+                      </div>
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {user.mobile}
+                        {
+                          new Date(voucher.validTill)
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {voucher.amount}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
@@ -198,13 +230,13 @@ const UserTable = () => {
                         </button>
                         <button
                           className="hover:text-primary"
-                          onClick={() => handleDeleteUser(user._id)}
+                          onClick={() => handleDeleteVoucher(voucher._id)}
                         >
                           <DeleteOutlined style={{ fontSize: 24 }} />
                         </button>
                         <button
                           className="hover:text-primary"
-                          onClick={() => handleEditUser(user)}
+                          onClick={() => handleEditVoucher(voucher)}
                         >
                           <EditOutlined style={{ fontSize: 24 }} />
                         </button>
@@ -216,7 +248,7 @@ const UserTable = () => {
             </tbody>
           </table>
         </div>
-        {users && users.length > 0 && (
+        {vouchers && vouchers.length > 0 && (
           <div className="mt-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <button
@@ -240,7 +272,7 @@ const UserTable = () => {
           </div>
         )}
 
-        {users && users.length === 0 && (
+        {vouchers && vouchers.length === 0 && (
           <div className="flex w-full justify-center p-10">No User Found</div>
         )}
 
@@ -249,51 +281,98 @@ const UserTable = () => {
             <div className="z-9999 w-[90%] rounded bg-white p-6 shadow-lg sm:w-[50%]">
               <form onSubmit={handleSubmit}>
                 <h2 className="mb-4 text-xl font-bold text-black">
-                  Update User
+                  Update Voucher
                 </h2>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-black">
-                    Name
+                    Title
                   </label>
                   <input
-                    name="name"
+                    name="title"
                     type="text"
                     className="w-full rounded border p-2"
-                    value={formValues.name}
+                    value={formValues.title}
                     onChange={handleChange}
                   />
-                  {errors.name && (
-                    <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                  {errors.title && (
+                    <p className="mt-1 text-sm text-red-500">{errors.title}</p>
                   )}
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-black">
-                    Email
+                    Description
                   </label>
                   <input
-                    name="email"
+                    name="des"
                     type="text"
                     className="w-full rounded border p-2"
-                    value={formValues.email}
+                    value={formValues.des}
                     onChange={handleChange}
                   />
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                  {errors.des && (
+                    <p className="mt-1 text-sm text-red-500">{errors.des}</p>
                   )}
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-black">
-                    Mobile
+                    Image
+                  </label>
+                  <div className=" mt-4 flex items-center space-x-4">
+                    <img
+                      src={updatedImage}
+                      alt="Voucher"
+                      className="h-15 w-15 rounded-lg object-cover"
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setUpdatedImage(URL.createObjectURL(file));
+                          setImage(file);
+                        }
+                      }}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-black">
+                    Valid Till
                   </label>
                   <input
-                    name="mobile"
+                    name="validTill"
+                    type="date"
+                    onKeyDown={(e) => e.preventDefault()}
+                    min={new Date().toISOString().split("T")[0]}
+                    value={
+                      formValues.validTill &&
+                      new Date(formValues.validTill).toISOString().split("T")[0]
+                    }
+                    onChange={handleChange}
+                    className="w-full cursor-pointer rounded border p-2"
+                    onClick={(e) => e.currentTarget.showPicker()}
+                  />
+                  {errors.validTill && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.validTill}
+                    </p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-black">
+                    Amount
+                  </label>
+                  <input
+                    name="amount"
                     type="number"
                     className="w-full rounded border p-2"
-                    value={formValues.mobile}
+                    value={formValues.amount}
                     onChange={handleChange}
                   />
-                  {errors.mobile && (
-                    <p className="mt-1 text-sm text-red-500">{errors.mobile}</p>
+                  {errors.amount && (
+                    <p className="mt-1 text-sm text-red-500">{errors.amount}</p>
                   )}
                 </div>
                 <div className="flex justify-end space-x-4">
@@ -370,4 +449,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default VoucherTable;

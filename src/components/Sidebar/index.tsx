@@ -7,6 +7,7 @@ import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { LocalOfferOutlined } from "@mui/icons-material";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -71,6 +72,11 @@ const menuGroups = [
         ),
         label: "User",
         route: "/user",
+      },
+      {
+        icon: <LocalOfferOutlined style={{ fontSize: 18 }} />,
+        label: "Voucher",
+        route: "/voucher",
       },
     ],
   },

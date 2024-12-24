@@ -1,9 +1,13 @@
 import {
+  addVoucherRoute,
   adminSignInRoute,
   deleteUserRoute,
+  deleteVoucherRoute,
   editUserRoute,
   forgotUserPasswordRoute,
   getAllUserRoute,
+  getAllVoucherRoute,
+  updateVoucherRoute,
   validateTokenRoute,
 } from "./backendRoutes";
 
@@ -115,6 +119,73 @@ export const forgotUserPassword = async (user: object) => {
     return data;
   } catch (error) {
     console.error("forgotUserPassword" + " Error" + error);
+  }
+  return null;
+};
+
+export const createVoucher = async (voucher: FormData) => {
+  try {
+    const response = await fetch(addVoucherRoute, {
+      method: "POST",
+      body: voucher,
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("createVoucher" + " Error" + error);
+  }
+  return null;
+};
+
+export const getAllVoucher = async (pageNumber: number) => {
+  try {
+    const response = await fetch(getAllVoucherRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pageNumber,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("createVoucher" + " Error" + error);
+  }
+  return null;
+};
+
+export const updateVoucher = async (voucher: FormData) => {
+  console.error("createVoucher" + JSON.stringify(voucher));
+  try {
+    const response = await fetch(updateVoucherRoute, {
+      method: "POST",
+      body: voucher,
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("createVoucher" + " Error" + error);
+  }
+  return null;
+};
+
+export const deleteVoucherById = async (voucherId: string) => {
+  try {
+    const response = await fetch(deleteVoucherRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        voucherId,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("deleteUserById" + " Error" + error);
   }
   return null;
 };
