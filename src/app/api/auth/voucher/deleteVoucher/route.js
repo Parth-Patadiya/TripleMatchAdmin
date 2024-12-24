@@ -19,24 +19,27 @@ export async function POST(req) {
     // Fetch the existing voucher details from the database
     const existingVoucher = await getVoucherById(voucherId);
 
-    if (existingVoucher.image) {
-        const imagePath = path.resolve(`./public${existingVoucher.image}`); 
-  
-        console.log(`Deleting image at path: ${imagePath}`); // Add log to see the image path being used
-  
-        try {
-          await fs.unlink(imagePath); // Delete the image file
-          console.log(`Image deleted successfully: ${imagePath}`);
-        } catch (err) {
-          console.error('Error deleting image:', err);
-          return { status: 0, message: 'Failed to delete image' };
-        }
-      }
     if (!existingVoucher) {
       return new Response(
         JSON.stringify({ status: 0, message: 'Voucher not found' }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Delete the associated image if it exists
+    if (existingVoucher.image) {
+      const imagePath = path.resolve(`./public${existingVoucher.image}`);
+
+      try {
+        await fs.unlink(imagePath); // Delete the image file
+        console.log(`Image deleted successfully: ${imagePath}`);
+      } catch (err) {
+        console.error('Error deleting image:', err);
+        return new Response(
+          JSON.stringify({ status: 0, message: 'Failed to delete image' }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     // Delete the voucher
