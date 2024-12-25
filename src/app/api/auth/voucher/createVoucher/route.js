@@ -39,7 +39,7 @@ export async function POST(req) {
 
     // Ensure unique file name
     const uniqueName = `${Date.now()}-${imageFile.name}`;
-    const uploadDir = path.resolve('./tmp/cache/images/vouchers'); // Adjust path as needed
+    const uploadDir = path.resolve('./var/task/vouchers'); // Adjust path as needed
     await fs.mkdir(uploadDir, { recursive: true });
 
     const imagePath = path.join(uploadDir, uniqueName);
@@ -47,7 +47,7 @@ export async function POST(req) {
     await fs.writeFile(imagePath, Buffer.from(imageBuffer));
 
     // Save voucher in the database
-    const imageURL = `/images/vouchers/${uniqueName}`;
+    const imageURL = `/vouchers/${uniqueName}`;
     const userReqData = [title, description, imageURL, validTill, amount];
     await createVoucher(...userReqData);
 

@@ -37,7 +37,7 @@ export async function POST(req) {
 
     if (imageFile && typeof imageFile !== 'string') {
       // Save the new image locally if provided
-      const uploadDir = path.resolve('./tmp/cache/images/vouchers'); // Ensure 'uploads' directory exists
+      const uploadDir = path.resolve('./var/task/vouchers'); // Ensure 'uploads' directory exists
       await fs.mkdir(uploadDir, { recursive: true });
 
       imagePath = path.join(uploadDir, imageFile.name);
