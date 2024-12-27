@@ -92,7 +92,7 @@ const Voucher = () => {
     <DefaultLayout>
       <button
         onClick={openModal}
-        className="mb-4 flex w-full cursor-pointer items-center justify-center rounded-lg border border-primary bg-primary p-4 text-sm font-medium text-black text-white transition hover:bg-opacity-90"
+        className="mb-4 flex w-full cursor-pointer items-center justify-center rounded-lg border border-primary bg-primary p-4 text-sm font-medium text-white transition hover:bg-opacity-90"
       >
         <AddOutlined style={{ fontSize: 24 }} />
         Add Coupon

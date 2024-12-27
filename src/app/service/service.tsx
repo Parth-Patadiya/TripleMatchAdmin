@@ -7,6 +7,7 @@ import {
   forgotUserPasswordRoute,
   getAllUserRoute,
   getAllVoucherRoute,
+  getUserByIDRoute,
   updateVoucherRoute,
   validateTokenRoute,
 } from "./backendRoutes";
@@ -43,6 +44,25 @@ export const getAllUsers = async (pageNumber: number) => {
     return data;
   } catch (error) {
     console.error("getAllUsers" + " Error" + error);
+  }
+  return null;
+};
+
+export const getUserById = async (userId: string) => {
+  try {
+    const response = await fetch(getUserByIDRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("getUserById" + " Error" + error);
   }
   return null;
 };

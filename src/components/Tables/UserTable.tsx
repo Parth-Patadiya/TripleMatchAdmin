@@ -11,6 +11,7 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 const UserTable = () => {
   const [formValues, setFormValues] = useState<Record<string, string>>({
@@ -30,6 +31,12 @@ const UserTable = () => {
   const [totalPages, setTotalPages] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  const handleNavigation = (userId: string) => {
+    localStorage.setItem("userDId", userId);
+    router.push("/user/user-details");
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -145,7 +152,7 @@ const UserTable = () => {
   }, [currentPage]); // Re-fetch when page or itemsPerPage changes
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-1 2xl:gap-7.5">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-1 md:gap-6 xl:grid-cols-1 2xl:gap-7.5">
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
@@ -193,7 +200,10 @@ const UserTable = () => {
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <button className="hover:text-primary">
+                        <button
+                          className="hover:text-primary"
+                          onClick={() => handleNavigation(user._id)}
+                        >
                           <RemoveRedEyeOutlined style={{ fontSize: 24 }} />
                         </button>
                         <button
