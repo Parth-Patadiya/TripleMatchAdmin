@@ -1,4 +1,4 @@
-import { comparePasswords, generateToken, getUserByEmail, updateUserActivity } from '../../../../../../lib/auth';
+import { comparePasswords, generateToken, getUserByEmail, getUserById, updateUserActivity } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
@@ -28,9 +28,10 @@ export async function POST(req) {
 
     await updateUserActivity(user._id, updatedUserActivity);
 
+    const userData = await getUserById(user._id);
 
     // Compare the password
-    const isMatch = await comparePasswords(password, user.password);
+    const isMatch = await comparePasswords(password, userData.password);
     if (!isMatch) {
       return new Response(
         JSON.stringify({ status: 0, message: 'Invalid credentials' }),
@@ -45,13 +46,13 @@ export async function POST(req) {
       JSON.stringify({
         message: 'Login successful',
         user: {
-          name: user.name,
-          email: user.email,
+          name: userData.name,
+          email: userData.email,
         },
         token,
         userActivity: {
-          ...user.userActivity,
-          signinCount: user.userActivity.signinCount + 1, // Updated value
+          ...userData.userActivity,
+          signinCount: userData.userActivity.signinCount, // Updated value
         },
         status: 1
       }),
