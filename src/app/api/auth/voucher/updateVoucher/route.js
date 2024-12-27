@@ -37,7 +37,7 @@ export async function POST(req) {
 
     if (imageFile && typeof imageFile !== 'string') {
       // Save the new image locally if provided
-      const uploadDir = path.resolve('./vouchers'); // Ensure 'uploads' directory exists
+      const uploadDir = path.resolve('./public/images/vouchers'); // Ensure 'uploads' directory exists
       await fs.mkdir(uploadDir, { recursive: true });
 
       imagePath = path.join(uploadDir, imageFile.name);
@@ -49,7 +49,7 @@ export async function POST(req) {
     const updateData = {
       title: title || existingVoucher.title,
       description: description || existingVoucher.description,
-      image: imageFile ? `/vouchers/${imageFile.name}` : imagePath,
+      image: imageFile ? `/images/vouchers/${imageFile.name}` : imagePath,
       validTill: validTill || existingVoucher.validTill,
       amount: amount || existingVoucher.amount,
       updatedAt: new Date(), // Add the updatedAt field

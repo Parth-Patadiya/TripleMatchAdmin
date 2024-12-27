@@ -19,7 +19,7 @@ export async function POST(req) {
       JSON.stringify({
         status: 1,
         message: response.message,
-        vouchers: response.data,
+        vouchers: response.data.reverse(),
         pagination: response.pagination,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }

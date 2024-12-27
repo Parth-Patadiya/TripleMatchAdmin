@@ -1,4 +1,4 @@
-import { comparePasswords, generateToken, getUserByEmail } from '../../../../../../lib/auth';
+import { comparePasswords, generateToken, getUserByEmail, updateUserActivity } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
@@ -20,6 +20,15 @@ export async function POST(req) {
       );
     }
 
+    // Update user activity
+    const updatedUserActivity = {
+      signinCount: (user.userActivity?.signinCount || 0) + 1,
+      signoutCount: user.userActivity?.signoutCount || 0,
+    };
+
+    await updateUserActivity(user._id, updatedUserActivity);
+
+
     // Compare the password
     const isMatch = await comparePasswords(password, user.password);
     if (!isMatch) {
@@ -40,6 +49,10 @@ export async function POST(req) {
           email: user.email,
         },
         token,
+        userActivity: {
+          ...user.userActivity,
+          signinCount: user.userActivity.signinCount + 1, // Updated value
+        },
         status: 1
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
@@ -48,7 +61,7 @@ export async function POST(req) {
     console.error(error); // Log error to the server console
     return new Response(
       JSON.stringify({ status: 0, message: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' }  }
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

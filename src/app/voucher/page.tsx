@@ -235,7 +235,7 @@ const Voucher = () => {
                       Loading...
                     </div>
                   ) : (
-                    "Updete"
+                    "Add"
                   )}
                 </button>
               </div>

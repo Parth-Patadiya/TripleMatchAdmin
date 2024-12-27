@@ -31,18 +31,16 @@ const SignIn: React.FC = () => {
         localStorage.setItem("authToken", token);
         localStorage.setItem("adminName", user.name);
         localStorage.setItem("adminEmail", user.email);
-        console.log("ok");
-        setLoading(false);
         router.push("/dashboard");
       } else {
         console.log("catch");
-        setLoading(false);
         setError(data.message);
       }
     } catch (err) {
       console.log("catch");
-      setLoading(false);
       setError(err as string);
+    } finally {
+      setLoading(false);
     }
   };
   return (

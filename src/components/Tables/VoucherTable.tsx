@@ -273,7 +273,9 @@ const VoucherTable = () => {
         )}
 
         {vouchers && vouchers.length === 0 && (
-          <div className="flex w-full justify-center p-10">No User Found</div>
+          <div className="flex w-full justify-center p-10">
+            No Voucher Found
+          </div>
         )}
 
         {isModalOpen && (

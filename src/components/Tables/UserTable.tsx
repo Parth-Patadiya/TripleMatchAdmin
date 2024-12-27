@@ -287,7 +287,7 @@ const UserTable = () => {
                   </label>
                   <input
                     name="mobile"
-                    type="number"
+                    type="tel"
                     className="w-full rounded border p-2"
                     value={formValues.mobile}
                     onChange={handleChange}

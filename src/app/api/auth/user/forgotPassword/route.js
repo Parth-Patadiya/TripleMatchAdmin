@@ -6,9 +6,6 @@ export async function POST(req) {
     const result = await handleForgotPassword(email);
 
     if (result.success) {
-      // TODO: Replace console log with email-sending logic using Nodemailer or similar
-      console.log("Reset link:", result.resetLink);
-
       return new Response(
         JSON.stringify({
           message: result.message,
