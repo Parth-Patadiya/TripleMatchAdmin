@@ -20,12 +20,24 @@ export async function POST(req) {
       );
     }
 
-    // Update user activity
+    // Update only the signinCount while keeping other userActivity values intact
     const updatedUserActivity = {
       signinCount: (user.userActivity?.signinCount || 0) + 1,
       signoutCount: user.userActivity?.signoutCount || 0,
+      playForFun: user.userActivity?.playForFun || {
+        count: 0,
+        win: 0,
+        lost: 0,
+        restrat: 0,
+      },
+      playForReal: user.userActivity?.playForReal || {
+        easy: { count: 0, win: 0, lost: 0, restrat: 0 },
+        medium: { count: 0, win: 0, lost: 0, restrat: 0 },
+        hard: { count: 0, win: 0, lost: 0, restrat: 0 },
+      },
     };
 
+    // Update user activity in database
     await updateUserActivity(user._id, updatedUserActivity);
 
     const userData = await getUserById(user._id);
@@ -50,11 +62,8 @@ export async function POST(req) {
           email: userData.email,
         },
         token,
-        userActivity: {
-          ...userData.userActivity,
-          signinCount: userData.userActivity.signinCount, // Updated value
-        },
-        status: 1
+        userActivity: updatedUserActivity, // Send updated userActivity with the incremented signinCount
+        status: 1,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );

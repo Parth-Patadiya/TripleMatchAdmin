@@ -1,5 +1,4 @@
 import { getUserByEmail, updateLogoutCount } from '../../../../../../lib/auth';
-import { ObjectId } from 'mongodb';
 
 export async function POST(req) {
   try {
@@ -21,7 +20,7 @@ export async function POST(req) {
       );
     }
 
-    const result = updateLogoutCount(user._id)
+    const result = await updateLogoutCount(user._id)
 
     if (result.matchedCount === 0) {
       return new Response(
