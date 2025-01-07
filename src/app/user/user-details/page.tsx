@@ -9,9 +9,16 @@ import Loader from "@/components/common/Loader";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import TableOne from "@/components/Tables/TableOne";
 import { LoginResponse } from "@/types/userById";
-import { LoginOutlined, LogoutOutlined } from "@mui/icons-material";
+import {
+  EmojiEventsOutlined,
+  GppBadOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  RestartAltOutlined,
+} from "@mui/icons-material";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 const MapOne = dynamic(() => import("@/components/Maps/MapOne"), {
   ssr: false,
@@ -54,6 +61,9 @@ const UserDetails: React.FC = () => {
         <Loader />
       ) : (
         <>
+          <h2 className="mb-4 text-xl font-bold text-black dark:text-white">
+            User Details
+          </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardUserData
               name={user?.user.name || ""}
@@ -73,6 +83,134 @@ const UserDetails: React.FC = () => {
               rate=""
             >
               <LogoutOutlined />
+            </CardDataStats>
+          </div>
+          <h2 className="my-4 text-xl font-bold text-black dark:text-white">
+            Play For Fun: {user?.userActivity?.playForFun?.count || "0"}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <CardDataStats
+              title="Win"
+              total={user?.userActivity?.playForFun?.win.toString() || "0"}
+              rate=""
+            >
+              <EmojiEventsOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Lost"
+              total={user?.userActivity?.playForFun?.lost.toString() || "0"}
+              rate=""
+            >
+              <GppBadOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Restart"
+              total={user?.userActivity?.playForFun?.restrat.toString() || "0"}
+              rate=""
+            >
+              <RestartAltOutlined />
+            </CardDataStats>
+          </div>
+          <h2 className="my-4 text-xl font-bold text-black dark:text-white">
+            Play For Real
+          </h2>
+          <h2 className="my-4 text-lg font-bold text-black dark:text-white">
+            Easy: {user?.userActivity?.playForReal?.easy.count || "0"}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <CardDataStats
+              title="Win"
+              total={
+                user?.userActivity?.playForReal?.easy?.win?.toString() || "0"
+              }
+              rate=""
+            >
+              <EmojiEventsOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Lost"
+              total={
+                user?.userActivity?.playForReal?.easy?.lost?.toString() || "0"
+              }
+              rate=""
+            >
+              <GppBadOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Restart"
+              total={
+                user?.userActivity?.playForReal?.easy?.restrat?.toString() ||
+                "0"
+              }
+              rate=""
+            >
+              <RestartAltOutlined />
+            </CardDataStats>
+          </div>
+          <h2 className="my-4 text-lg font-bold text-black dark:text-white">
+            Medium: {user?.userActivity?.playForReal?.medium.count || "0"}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <CardDataStats
+              title="Win"
+              total={
+                user?.userActivity?.playForReal?.medium?.win?.toString() || "0"
+              }
+              rate=""
+            >
+              <EmojiEventsOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Lost"
+              total={
+                user?.userActivity?.playForReal?.medium?.lost?.toString() || "0"
+              }
+              rate=""
+            >
+              <GppBadOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Restart"
+              total={
+                user?.userActivity?.playForReal?.medium?.restrat?.toString() ||
+                "0"
+              }
+              rate=""
+            >
+              <RestartAltOutlined />
+            </CardDataStats>
+          </div>
+          <h2 className="my-4 text-lg font-bold text-black dark:text-white">
+            Hard: {user?.userActivity?.playForReal?.hard.count || "0"}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <CardDataStats
+              title="Win"
+              total={
+                user?.userActivity?.playForReal?.hard?.win?.toString() || "0"
+              }
+              rate=""
+            >
+              <EmojiEventsOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Lost"
+              total={
+                user?.userActivity?.playForReal?.hard?.lost?.toString() || "0"
+              }
+              rate=""
+            >
+              <GppBadOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="Restart"
+              total={
+                user?.userActivity?.playForReal?.hard?.restrat?.toString() ||
+                "0"
+              }
+              rate=""
+            >
+              <RestartAltOutlined />
             </CardDataStats>
           </div>
 
