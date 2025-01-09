@@ -3,10 +3,18 @@ import { getAllVouchersByPageNo } from "../../../../../../lib/auth";
 export async function POST(req) {
   try {
     // Read the request body
-    const { itemsPerPage = 10, pageNumber = 1 } = await req.json(); // Default values if not provided
+    const {
+      itemsPerPage = 10,
+      pageNumber = 1,
+      searchQuery = "",
+    } = await req.json(); // Default values if not provided
 
     // Call the function to get the vouchers with pagination
-    const response = await getAllVouchersByPageNo(itemsPerPage, pageNumber);
+    const response = await getAllVouchersByPageNo(
+      itemsPerPage,
+      pageNumber,
+      searchQuery,
+    );
 
     if (response.status === 0) {
       return new Response(

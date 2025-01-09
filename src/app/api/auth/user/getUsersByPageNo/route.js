@@ -2,11 +2,22 @@ import { getUsersByItemPerPage } from "../../../../../../lib/auth";
 
 export async function POST(req) {
   try {
-    const { itemsPerPage = 10, pageNumber = 1 } = await req.json();
+    const {
+      itemsPerPage = 10,
+      pageNumber = 1,
+      searchQuery = "",
+    } = await req.json();
     // const itemsPerPage = parseInt(url.searchParams.get('itemsPerPage') || '10', 10); // Default 10 items per page
     // const pageNumber = parseInt(url.searchParams.get('pageNumber') || '1', 10); // Default to page 1
 
-    const { users, totalUsers, totalPages, currentPage } = await getUsersByItemPerPage(Number(itemsPerPage), Number(pageNumber));
+    const { users, totalUsers, totalPages, currentPage } =
+      await getUsersByItemPerPage(
+        Number(itemsPerPage),
+        Number(pageNumber),
+        searchQuery,
+      );
+    
+    
 
     return new Response(
       JSON.stringify({

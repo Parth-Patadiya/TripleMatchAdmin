@@ -27,7 +27,7 @@ export async function POST(req) {
 
     // Hash the password
     const hashedPassword = await hashPassword(password);
-
+    
     // Create new User
     const userReqData = [name, email, mobile, hashedPassword, role];
     await createUser(...userReqData);

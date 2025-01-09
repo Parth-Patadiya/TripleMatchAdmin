@@ -1,8 +1,5 @@
 import {
-  deleteUserById,
   deleteVoucherById,
-  editUserById,
-  getAllUsers,
   getAllVoucher,
   updateVoucher,
 } from "@/app/service/service";
@@ -12,6 +9,7 @@ import {
   RemoveRedEyeOutlined,
   DeleteOutlined,
   EditOutlined,
+  SearchOutlined,
 } from "@mui/icons-material";
 import { Voucher } from "@/types/voucher";
 
@@ -46,6 +44,11 @@ const VoucherTable = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    fetchVoucher(currentPage, value);
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formValues.title) {
@@ -71,14 +74,17 @@ const VoucherTable = () => {
     }
   };
 
-  const fetchVoucher = async () => {
+  const fetchVoucher = async (pageNo: number, searchQuery?: string) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getAllVoucher(currentPage); // Pass page and limit to API
+      const data = await getAllVoucher(pageNo, searchQuery ? searchQuery : ""); // Pass page and limit to API
       if (data && data.status === 1) {
         setVouchers(data.vouchers);
         setTotalPages(data.pagination.totalPages);
+        if (currentPage > data.pagination.currentPage) {
+          setCurrentPage(data.pagination.currentPage);
+        }
         setLoading(false);
       } else {
         setLoading(false);
@@ -96,7 +102,7 @@ const VoucherTable = () => {
     try {
       const data = await deleteVoucherById(voucherId); // Pass page and limit to API
       if (data && data.status === 1) {
-        fetchVoucher();
+        fetchVoucher(vouchers.length === 1 ? currentPage - 1 : currentPage);
         setLoading(false);
       } else {
         setLoading(false);
@@ -138,7 +144,7 @@ const VoucherTable = () => {
 
         const data = await updateVoucher(formData); // Pass page and limit to API
         if (data && data.status === 1) {
-          fetchVoucher();
+          fetchVoucher(currentPage);
           // setLoading(false);
         } else {
           // setLoading(false);
@@ -158,13 +164,32 @@ const VoucherTable = () => {
   };
 
   useEffect(() => {
-    fetchVoucher();
+    fetchVoucher(currentPage);
   }, [currentPage]); // Re-fetch when page or itemsPerPage changes
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-1 2xl:gap-7.5">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-1 md:gap-6 xl:grid-cols-1 2xl:gap-7.5">
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
+          <div className=" mb-5">
+            <form>
+              <div className="relative">
+                <button
+                  disabled
+                  className="absolute left-0 top-1/2 -translate-y-1/2"
+                >
+                  <SearchOutlined />
+                </button>
+
+                <input
+                  type="text"
+                  placeholder="Type to search..."
+                  className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125"
+                  onChange={handleSearch}
+                />
+              </div>
+            </form>
+          </div>
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">

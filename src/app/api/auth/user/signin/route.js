@@ -2,8 +2,8 @@ import { comparePasswords, generateToken, getUserByEmail, getUserById, updateUse
 
 export async function POST(req) {
   try {
-    const { email, password } = await req.json();
-
+    const { email, password, activityType, deviceDetails } = await req.json();
+    
     if (!email || !password) {
       return new Response(
         JSON.stringify({ status: 0, message: 'Email and password are required' }),
@@ -20,27 +20,29 @@ export async function POST(req) {
       );
     }
 
-    // Update only the signinCount while keeping other userActivity values intact
-    const updatedUserActivity = {
-      signinCount: (user.userActivity?.signinCount || 0) + 1,
-      signoutCount: user.userActivity?.signoutCount || 0,
-      playForFun: user.userActivity?.playForFun || {
-        count: 0,
-        win: 0,
-        lost: 0,
-        restrat: 0,
-      },
-      playForReal: user.userActivity?.playForReal || {
-        easy: { count: 0, win: 0, lost: 0, restrat: 0 },
-        medium: { count: 0, win: 0, lost: 0, restrat: 0 },
-        hard: { count: 0, win: 0, lost: 0, restrat: 0 },
-      },
+    if (!user.userActivity) {
+      user.userActivity = { signIn: [] }; // Initialize userActivity with an empty signIn array if it doesn't exist
+    } else if (!user.userActivity.signIn) {
+      user.userActivity.signIn = []; // Initialize signIn array if it doesn't exist
+    }
+
+    // // Update only the signinCount while keeping other userActivity values intact
+    const newSignInActivity = {
+      deviceName: deviceDetails.deviceName,
+      deviceModel: deviceDetails.deviceModel,
+      operatingSystem: deviceDetails.operatingSystem,
+      processorType: deviceDetails.processorType,
+      appVersion: deviceDetails.appVersion,
+      date: Date.now(), // Add current date and time
     };
-
+    const updatedUserActivity = {
+      ...user.userActivity,
+      signIn: [...user.userActivity.signIn, newSignInActivity], // Append to the existing signIn array
+    };
     // Update user activity in database
-    await updateUserActivity(user._id, updatedUserActivity);
+    await updateUserActivity(user.email, activityType, deviceDetails);
 
-    const userData = await getUserById(user._id);
+    const userData = await getUserByEmail(user.email);
 
     // Compare the password
     const isMatch = await comparePasswords(password, userData.password);

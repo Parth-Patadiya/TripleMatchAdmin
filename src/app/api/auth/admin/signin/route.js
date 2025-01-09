@@ -36,6 +36,7 @@ export async function POST(req) {
       JSON.stringify({
         message: 'Login successful',
         user: {
+          id: admin._id,
           name: admin.name,
           email: admin.email,
         },

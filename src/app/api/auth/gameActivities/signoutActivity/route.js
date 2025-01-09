@@ -1,8 +1,8 @@
-import { getUserByEmail, updateLogoutCount } from '../../../../../../lib/auth';
+import { getUserByEmail, updateUserActivity } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
-    const { email } = await req.json();
+    const { email, activityType, deviceDetails } = await req.json();
 
     if (!email) {
       return new Response(
@@ -20,7 +20,27 @@ export async function POST(req) {
       );
     }
 
-    const result = await updateLogoutCount(user._id)
+    if (!user.userActivity) {
+      user.userActivity = { signOut: [] };
+    } else if (!user.userActivity.signOut) {
+      user.userActivity.signOut = [];
+    }
+
+    // Update only the signinCount while keeping other userActivity values intact
+    const newSignOutActivity = {
+      deviceName: deviceDetails.deviceName,
+      deviceModel: deviceDetails.deviceModel,
+      operatingSystem: deviceDetails.operatingSystem,
+      processorType: deviceDetails.processorType,
+      appVersion: deviceDetails.appVersion,
+      date: Date.now(), // Add current date and time
+    };
+
+    const updatedUserActivity = {
+      ...user.userActivity,
+      signOut: [...user.userActivity.signOut, newSignOutActivity], // Append to the existing signIn array
+    };
+    const result = await updateUserActivity(email, activityType, deviceDetails);
 
     if (result.matchedCount === 0) {
       return new Response(
@@ -35,10 +55,7 @@ export async function POST(req) {
         user: {
           name: user.name,
           email: user.email,
-          userActivity: {
-            ...user.userActivity,
-            signoutCount: user.userActivity.signoutCount + 1, // Updated value
-          },
+          userActivity: updatedUserActivity,
         },
         status: 1,
       }),

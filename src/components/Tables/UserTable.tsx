@@ -10,6 +10,7 @@ import {
   RemoveRedEyeOutlined,
   DeleteOutlined,
   EditOutlined,
+  SearchOutlined,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
@@ -44,6 +45,11 @@ const UserTable = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    handleUser(currentPage, value);
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formValues.name) {
@@ -66,14 +72,17 @@ const UserTable = () => {
     }
   };
 
-  const handleUser = async () => {
+  const handleUser = async (pageNo: number, searchQuery?: string) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getAllUsers(currentPage); // Pass page and limit to API
+      const data = await getAllUsers(pageNo, searchQuery ? searchQuery : ""); // Pass page and limit to API
       if (data && data.status === 1) {
         setUsers(data.users);
         setTotalPages(data.pagination.totalPages);
+        if (currentPage > data.pagination.currentPage) {
+          setCurrentPage(data.pagination.currentPage);
+        }
         setLoading(false);
       } else {
         setLoading(false);
@@ -91,7 +100,7 @@ const UserTable = () => {
     try {
       const data = await deleteUserById(userId); // Pass page and limit to API
       if (data && data.status === 1) {
-        handleUser();
+        handleUser(users.length === 1 ? currentPage - 1 : currentPage);
         setLoading(false);
       } else {
         setLoading(false);
@@ -129,7 +138,7 @@ const UserTable = () => {
           mobile: formValues.mobile,
         }); // Pass page and limit to API
         if (data && data.status === 1) {
-          handleUser();
+          handleUser(currentPage);
         } else {
           setError(data.message);
         }
@@ -148,13 +157,32 @@ const UserTable = () => {
   };
 
   useEffect(() => {
-    handleUser();
+    handleUser(currentPage);
   }, [currentPage]); // Re-fetch when page or itemsPerPage changes
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-1 md:gap-6 xl:grid-cols-1 2xl:gap-7.5">
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
+          <div className=" mb-5">
+            <form>
+              <div className="relative">
+                <button
+                  disabled
+                  className="absolute left-0 top-1/2 -translate-y-1/2"
+                >
+                  <SearchOutlined />
+                </button>
+
+                <input
+                  type="text"
+                  placeholder="Type to search..."
+                  className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125"
+                  onChange={handleSearch}
+                />
+              </div>
+            </form>
+          </div>
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">

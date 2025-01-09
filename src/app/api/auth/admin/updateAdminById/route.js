@@ -1,13 +1,13 @@
-import { hashPassword, updateUserById } from "../../../../../../lib/auth";
+import { hashPassword, updateAdminById } from "../../../../../../lib/auth";
 
 export async function POST(req) {
   try {
-    const { userId, name, email, mobile, password } = await req.json();
+    const { adminId, name, email, password } = await req.json();
 
-    if (!userId) {
+    if (!adminId) {
       return new Response(
         JSON.stringify({
-          message: 'User ID is required',
+          message: 'Admin ID is required',
           status: 0,
         }),
         { status: 400, headers: { 'Content-Type': 'application/json' } } // Bad Request
@@ -18,12 +18,11 @@ export async function POST(req) {
     const updateData = {};
     if (name) updateData.name = name;
     if (email) updateData.email = email;
-    if (mobile) updateData.mobile = mobile;
     if (password) {
       updateData.password = await hashPassword(password); // Ensure the password is hashed properly
     }
     // Call the `updateUserById` function
-    const result = await updateUserById(userId, updateData);
+    const result = await updateAdminById(adminId, updateData);
 
     if (result.success) {
       return new Response(

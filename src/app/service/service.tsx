@@ -29,7 +29,7 @@ export const adminSignIn = async (email: string, password: string) => {
   return null;
 };
 
-export const getAllUsers = async (pageNumber: number) => {
+export const getAllUsers = async (pageNumber: number, searchQuery: string) => {
   try {
     const response = await fetch(getAllUserRoute, {
       method: "POST",
@@ -38,6 +38,7 @@ export const getAllUsers = async (pageNumber: number) => {
       },
       body: JSON.stringify({
         pageNumber,
+        searchQuery,
       }),
     });
     const data = await response.json();
@@ -157,7 +158,10 @@ export const createVoucher = async (voucher: FormData) => {
   return null;
 };
 
-export const getAllVoucher = async (pageNumber: number) => {
+export const getAllVoucher = async (
+  pageNumber: number,
+  searchQuery: string,
+) => {
   try {
     const response = await fetch(getAllVoucherRoute, {
       method: "POST",
@@ -166,6 +170,7 @@ export const getAllVoucher = async (pageNumber: number) => {
       },
       body: JSON.stringify({
         pageNumber,
+        searchQuery,
       }),
     });
     const data = await response.json();
