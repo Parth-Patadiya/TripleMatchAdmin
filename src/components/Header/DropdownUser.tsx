@@ -13,7 +13,9 @@ const DropdownUser = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+    localStorage.removeItem("adminId");
+    localStorage.removeItem("adminEmail");
+    localStorage.removeItem("adminName");
     router.push("/auth/signin"); // Redirect to sign-in page
   };
 

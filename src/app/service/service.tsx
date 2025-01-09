@@ -5,9 +5,11 @@ import {
   deleteVoucherRoute,
   editUserRoute,
   forgotUserPasswordRoute,
+  getAdminByIdRoute,
   getAllUserRoute,
   getAllVoucherRoute,
   getUserByIDRoute,
+  updateAdminByIdRoute,
   updateVoucherRoute,
   validateTokenRoute,
 } from "./backendRoutes";
@@ -25,6 +27,42 @@ export const adminSignIn = async (email: string, password: string) => {
     return data;
   } catch (error) {
     console.error("adminSignIn" + " Error" + error);
+  }
+  return null;
+};
+
+export const getAdminById = async (adminId: string) => {
+  try {
+    const response = await fetch(getAdminByIdRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adminId }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("getAdminById" + " Error" + error);
+  }
+  return null;
+};
+
+export const updateAdminById = async (admin: object) => {
+  try {
+    const response = await fetch(updateAdminByIdRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...admin,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("editUserById" + " Error" + error);
   }
   return null;
 };

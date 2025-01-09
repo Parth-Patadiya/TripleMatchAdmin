@@ -2,6 +2,8 @@ const BaseURL = "/api/auth/";
 
 //Admin Routes
 export const adminSignInRoute = BaseURL + "admin/signin";
+export const getAdminByIdRoute = BaseURL + "admin/getAdminById";
+export const updateAdminByIdRoute = BaseURL + "admin/updateAdminById";
 
 //User Routes
 export const getAllUserRoute = BaseURL + "user/getUsersByPageNo";

@@ -2,12 +2,8 @@
 import { getUserById } from "@/app/service/service";
 import CardDataStats from "@/components/CardDataStats";
 import CardUserData from "@/components/CardUserData";
-import ChartOne from "@/components/Charts/ChartOne";
-import ChartTwo from "@/components/Charts/ChartTwo";
-import ChatCard from "@/components/Chat/ChatCard";
 import Loader from "@/components/common/Loader";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import TableOne from "@/components/Tables/TableOne";
 import { LoginResponse } from "@/types/userById";
 import {
   EmojiEventsOutlined,
@@ -16,17 +12,7 @@ import {
   LogoutOutlined,
   RestartAltOutlined,
 } from "@mui/icons-material";
-import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-
-const MapOne = dynamic(() => import("@/components/Maps/MapOne"), {
-  ssr: false,
-});
-
-const ChartThree = dynamic(() => import("@/components/Charts/ChartThree"), {
-  ssr: false,
-});
 
 const UserDetails: React.FC = () => {
   const userId = localStorage.getItem("userDId");
@@ -72,40 +58,55 @@ const UserDetails: React.FC = () => {
             />
             <CardDataStats
               title="Login"
-              total={user?.userActivity?.signinCount?.toString() || "0"}
+              total={user?.userActivity?.signIn.length?.toString() || "0"}
+              deviceData={user?.userActivity?.signIn}
               rate=""
             >
               <LoginOutlined />
             </CardDataStats>
             <CardDataStats
               title="Logout"
-              total={user?.userActivity?.signoutCount?.toString() || "0"}
+              total={user?.userActivity?.signOut.length?.toString() || "0"}
+              deviceData={user?.userActivity?.signOut}
               rate=""
             >
               <LogoutOutlined />
             </CardDataStats>
           </div>
           <h2 className="my-4 text-xl font-bold text-black dark:text-white">
-            Play For Fun: {user?.userActivity?.playForFun?.count || "0"}
+            Play For Fun:
+            {(user?.userActivity?.playForFun?.win?.length ?? 0) +
+              (user?.userActivity?.playForFun?.lost?.length ?? 0) +
+              (user?.userActivity?.playForFun?.restart?.length ?? 0)}
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardDataStats
               title="Win"
-              total={user?.userActivity?.playForFun?.win.toString() || "0"}
+              total={
+                user?.userActivity?.playForFun?.win?.length.toString() || "0"
+              }
+              deviceData={user?.userActivity?.playForFun?.win}
               rate=""
             >
               <EmojiEventsOutlined />
             </CardDataStats>
             <CardDataStats
               title="Lost"
-              total={user?.userActivity?.playForFun?.lost.toString() || "0"}
+              total={
+                user?.userActivity?.playForFun?.lost?.length.toString() || "0"
+              }
+              deviceData={user?.userActivity?.playForFun?.lost}
               rate=""
             >
               <GppBadOutlined />
             </CardDataStats>
             <CardDataStats
               title="Restart"
-              total={user?.userActivity?.playForFun?.restrat.toString() || "0"}
+              total={
+                user?.userActivity?.playForFun?.restart?.length.toString() ||
+                "0"
+              }
+              deviceData={user?.userActivity?.playForFun?.restart}
               rate=""
             >
               <RestartAltOutlined />
@@ -115,14 +116,19 @@ const UserDetails: React.FC = () => {
             Play For Real
           </h2>
           <h2 className="my-4 text-lg font-bold text-black dark:text-white">
-            Easy: {user?.userActivity?.playForReal?.easy.count || "0"}
+            Easy:
+            {(user?.userActivity?.playForReal?.easy?.win?.length ?? 0) +
+              (user?.userActivity?.playForReal?.easy?.lost?.length ?? 0) +
+              (user?.userActivity?.playForReal?.easy?.restart?.length ?? 0)}
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardDataStats
               title="Win"
               total={
-                user?.userActivity?.playForReal?.easy?.win?.toString() || "0"
+                user?.userActivity?.playForReal?.easy?.win?.length.toString() ||
+                "0"
               }
+              deviceData={user?.userActivity?.playForReal?.easy?.win}
               rate=""
             >
               <EmojiEventsOutlined />
@@ -130,8 +136,10 @@ const UserDetails: React.FC = () => {
             <CardDataStats
               title="Lost"
               total={
-                user?.userActivity?.playForReal?.easy?.lost?.toString() || "0"
+                user?.userActivity?.playForReal?.easy?.lost?.length.toString() ||
+                "0"
               }
+              deviceData={user?.userActivity?.playForReal?.easy?.lost}
               rate=""
             >
               <GppBadOutlined />
@@ -139,23 +147,29 @@ const UserDetails: React.FC = () => {
             <CardDataStats
               title="Restart"
               total={
-                user?.userActivity?.playForReal?.easy?.restrat?.toString() ||
+                user?.userActivity?.playForReal?.easy?.restart?.length.toString() ||
                 "0"
               }
+              deviceData={user?.userActivity?.playForReal?.easy?.restart}
               rate=""
             >
               <RestartAltOutlined />
             </CardDataStats>
           </div>
           <h2 className="my-4 text-lg font-bold text-black dark:text-white">
-            Medium: {user?.userActivity?.playForReal?.medium.count || "0"}
+            Medium:
+            {(user?.userActivity?.playForReal?.medium?.win?.length ?? 0) +
+              (user?.userActivity?.playForReal?.medium?.lost?.length ?? 0) +
+              (user?.userActivity?.playForReal?.medium?.restart?.length ?? 0)}
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardDataStats
               title="Win"
               total={
-                user?.userActivity?.playForReal?.medium?.win?.toString() || "0"
+                user?.userActivity?.playForReal?.medium?.win?.length.toString() ||
+                "0"
               }
+              deviceData={user?.userActivity?.playForReal?.medium?.win}
               rate=""
             >
               <EmojiEventsOutlined />
@@ -163,8 +177,10 @@ const UserDetails: React.FC = () => {
             <CardDataStats
               title="Lost"
               total={
-                user?.userActivity?.playForReal?.medium?.lost?.toString() || "0"
+                user?.userActivity?.playForReal?.medium?.lost?.length.toString() ||
+                "0"
               }
+              deviceData={user?.userActivity?.playForReal?.medium?.lost}
               rate=""
             >
               <GppBadOutlined />
@@ -172,23 +188,29 @@ const UserDetails: React.FC = () => {
             <CardDataStats
               title="Restart"
               total={
-                user?.userActivity?.playForReal?.medium?.restrat?.toString() ||
+                user?.userActivity?.playForReal?.medium?.restart?.length.toString() ||
                 "0"
               }
+              deviceData={user?.userActivity?.playForReal?.medium?.restart}
               rate=""
             >
               <RestartAltOutlined />
             </CardDataStats>
           </div>
           <h2 className="my-4 text-lg font-bold text-black dark:text-white">
-            Hard: {user?.userActivity?.playForReal?.hard.count || "0"}
+            Hard:
+            {(user?.userActivity?.playForReal?.hard?.win?.length ?? 0) +
+              (user?.userActivity?.playForReal?.hard?.lost?.length ?? 0) +
+              (user?.userActivity?.playForReal?.hard?.restart?.length ?? 0)}
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardDataStats
               title="Win"
               total={
-                user?.userActivity?.playForReal?.hard?.win?.toString() || "0"
+                user?.userActivity?.playForReal?.hard?.win?.length.toString() ||
+                "0"
               }
+              deviceData={user?.userActivity?.playForReal?.hard?.win}
               rate=""
             >
               <EmojiEventsOutlined />
@@ -196,8 +218,10 @@ const UserDetails: React.FC = () => {
             <CardDataStats
               title="Lost"
               total={
-                user?.userActivity?.playForReal?.hard?.lost?.toString() || "0"
+                user?.userActivity?.playForReal?.hard?.lost?.length.toString() ||
+                "0"
               }
+              deviceData={user?.userActivity?.playForReal?.hard?.lost}
               rate=""
             >
               <GppBadOutlined />
@@ -205,9 +229,10 @@ const UserDetails: React.FC = () => {
             <CardDataStats
               title="Restart"
               total={
-                user?.userActivity?.playForReal?.hard?.restrat?.toString() ||
+                user?.userActivity?.playForReal?.hard?.restart?.length.toString() ||
                 "0"
               }
+              deviceData={user?.userActivity?.playForReal?.hard?.restart}
               rate=""
             >
               <RestartAltOutlined />

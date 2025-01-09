@@ -29,8 +29,9 @@ const SignIn: React.FC = () => {
       if (data && data.status == 1) {
         const { token, user } = data;
         localStorage.setItem("authToken", token);
-        localStorage.setItem("adminName", user.name);
+        localStorage.setItem("adminId", user.id);
         localStorage.setItem("adminEmail", user.email);
+        localStorage.setItem("adminName", user.name);
         router.push("/dashboard");
       } else {
         console.log("catch");

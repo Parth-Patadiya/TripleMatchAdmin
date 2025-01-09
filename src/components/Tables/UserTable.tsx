@@ -19,11 +19,13 @@ const UserTable = () => {
     name: "",
     email: "",
     mobile: "",
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({
     name: "",
     email: "",
     mobile: "",
+    password: "",
   });
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +62,9 @@ const UserTable = () => {
     }
     if (!formValues.mobile) {
       newErrors.mobile = "Mobile is required";
+    }
+    if (!formValues.password) {
+      newErrors.password = "Password is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -117,6 +122,7 @@ const UserTable = () => {
     setFormValues((prev) => ({ ...prev, name: user.name }));
     setFormValues((prev) => ({ ...prev, email: user.email }));
     setFormValues((prev) => ({ ...prev, mobile: user.mobile }));
+    setFormValues((prev) => ({ ...prev, password: user.password }));
     setIsModalOpen(true);
   };
 
@@ -136,6 +142,7 @@ const UserTable = () => {
           name: formValues.name,
           email: formValues.email,
           mobile: formValues.mobile,
+          password: formValues.password,
         }); // Pass page and limit to API
         if (data && data.status === 1) {
           handleUser(currentPage);
@@ -332,6 +339,23 @@ const UserTable = () => {
                   />
                   {errors.mobile && (
                     <p className="mt-1 text-sm text-red-500">{errors.mobile}</p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-black">
+                    Password
+                  </label>
+                  <input
+                    name="password"
+                    type="tel"
+                    className="w-full rounded border p-2"
+                    value={formValues.password}
+                    onChange={handleChange}
+                  />
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.password}
+                    </p>
                   )}
                 </div>
                 <div className="flex justify-end space-x-4">
