@@ -68,7 +68,7 @@ const UserActivityPopup: FC<UserActivityPopupProps> = ({
     <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black bg-opacity-50">
       <div
         ref={popupRef}
-        className="z-9999 h-[80%] w-[90%] rounded-sm border border-stroke bg-white px-2 py-2 shadow-default dark:border-strokedark dark:bg-boxdark lg:w-[50%]"
+        className="z-9999 h-[80%] w-[90%] rounded-sm border border-stroke bg-white px-2 py-2 shadow-default dark:border-strokedark dark:bg-boxdark lg:w-[80%]"
       >
         <div className="flex justify-between px-4 py-4">
           <h4 className="text-xl font-semibold text-black dark:text-white">

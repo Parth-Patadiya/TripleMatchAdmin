@@ -75,7 +75,7 @@ const UserDetails: React.FC = () => {
             </CardDataStats>
           </div>
           <h2 className="my-4 text-xl font-bold text-black dark:text-white">
-            Play For Fun:
+            Play For Fun:{" "}
             {(user?.userActivity?.playForFun?.win?.length ?? 0) +
               (user?.userActivity?.playForFun?.lost?.length ?? 0) +
               (user?.userActivity?.playForFun?.restart?.length ?? 0)}
@@ -117,7 +117,7 @@ const UserDetails: React.FC = () => {
             Play For Real
           </h2>
           <h2 className="my-4 text-lg font-bold text-black dark:text-white">
-            Easy:
+            Easy:{" "}
             {(user?.userActivity?.playForReal?.easy?.win?.length ?? 0) +
               (user?.userActivity?.playForReal?.easy?.lost?.length ?? 0) +
               (user?.userActivity?.playForReal?.easy?.restart?.length ?? 0)}
@@ -158,7 +158,7 @@ const UserDetails: React.FC = () => {
             </CardDataStats>
           </div>
           <h2 className="my-4 text-lg font-bold text-black dark:text-white">
-            Medium:
+            Medium:{" "}
             {(user?.userActivity?.playForReal?.medium?.win?.length ?? 0) +
               (user?.userActivity?.playForReal?.medium?.lost?.length ?? 0) +
               (user?.userActivity?.playForReal?.medium?.restart?.length ?? 0)}
@@ -199,7 +199,7 @@ const UserDetails: React.FC = () => {
             </CardDataStats>
           </div>
           <h2 className="my-4 text-lg font-bold text-black dark:text-white">
-            Hard:
+            Hard:{" "}
             {(user?.userActivity?.playForReal?.hard?.win?.length ?? 0) +
               (user?.userActivity?.playForReal?.hard?.lost?.length ?? 0) +
               (user?.userActivity?.playForReal?.hard?.restart?.length ?? 0)}

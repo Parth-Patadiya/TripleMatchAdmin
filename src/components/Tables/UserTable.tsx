@@ -291,19 +291,21 @@ const UserTable = () => {
 
         {isModalOpen && (
           <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="z-9999 w-[90%] rounded bg-white p-6 shadow-lg sm:w-[50%]">
-              <form onSubmit={handleSubmit}>
-                <h2 className="mb-4 text-xl font-bold text-black">
+            <div className="z-9999 w-[90%] rounded bg-white shadow-lg dark:bg-boxdark sm:w-[50%]">
+              <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
+                <h3 className="font-medium text-black dark:text-white">
                   Update User
-                </h2>
+                </h3>
+              </div>
+              <form className="p-7" onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-black">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Name
                   </label>
                   <input
                     name="name"
                     type="text"
-                    className="w-full rounded border p-2"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     value={formValues.name}
                     onChange={handleChange}
                   />
@@ -312,13 +314,13 @@ const UserTable = () => {
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-black">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Email
                   </label>
                   <input
                     name="email"
                     type="text"
-                    className="w-full rounded border p-2"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     value={formValues.email}
                     onChange={handleChange}
                   />
@@ -327,13 +329,13 @@ const UserTable = () => {
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-black">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Mobile
                   </label>
                   <input
                     name="mobile"
                     type="tel"
-                    className="w-full rounded border p-2"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     value={formValues.mobile}
                     onChange={handleChange}
                   />
@@ -342,13 +344,13 @@ const UserTable = () => {
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-black">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Password
                   </label>
                   <input
                     name="password"
                     type="tel"
-                    className="w-full rounded border p-2"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     value={formValues.password}
                     onChange={handleChange}
                   />
