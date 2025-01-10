@@ -1,50 +1,4 @@
 import { getUserByEmail, updateUserActivity } from '../../../../../../lib/auth';
-// import { ObjectId } from 'mongodb'; // Ensure ObjectId is imported if required
-
-// Utility function for deep merge with default initialization
-// function deepMergeWithDefaults(target, source, defaults) {
-//   for (const key of Object.keys(defaults)) {
-//     if (typeof defaults[key] === 'object' && !Array.isArray(defaults[key])) {
-//       // Initialize missing keys in nested objects
-//       target[key] = target[key] || {};
-//       deepMergeWithDefaults(target[key], source[key] || {}, defaults[key]);
-//     } else {
-//       // If the source value is undefined, initialize with default or zero, else keep the old value
-//       target[key] = source[key] !== undefined ? source[key] : (target[key] !== undefined ? target[key] : defaults[key]);
-//     }
-//   }
-//   return target;
-// }
-
-// Function to provide initial userActivity structure
-// function getDefaultUserActivity() {
-//   return {
-//     signIn: [],
-//     signOut: [],
-//     playForFun: {
-//       win: [],
-//       lost: [],
-//       restrat: [],
-//     },
-//     playForReal: {
-//       easy: {
-//         win: [],
-//         lost: [],
-//         restrat: [],
-//       },
-//       medium: {
-//         win: [],
-//         lost: [],
-//         restrat: [],
-//       },
-//       hard: {
-//         win: [],
-//         lost: [],
-//         restrat: [],
-//       },
-//     }
-//   };
-// }
 
 export async function POST(req) {
   try {
@@ -66,16 +20,6 @@ export async function POST(req) {
       );
     }
 
-    // Use default userActivity if it doesn't exist
-    // const currentActivity = user.userActivity || getDefaultUserActivity();
-
-    // Deep merge existing userActivity with provided userActivity, initializing missing values to defaults
-    // const updatedUserActivity = deepMergeWithDefaults(
-    //   { ...currentActivity }, // Clone existing activity to avoid mutation
-    //   gameDetails || {}, // Merge new data if provided
-    //   getDefaultUserActivity() // Default values to initialize missing ones
-    // );
-
     // Update user activity in database
     const updateResult = await updateUserActivity(email, activityType, gameDetails);
 
@@ -85,14 +29,21 @@ export async function POST(req) {
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
+    
+    if (updateResult.success === false) {
+      return new Response( JSON.stringify({
+        message: updateResult.message,
+        status: 0,
+      }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+    }
     return new Response(
       JSON.stringify({
         message: updateResult.message,
         user: {
           name: user.name,
           email: user.email,
-          // userActivity: updatedUserActivity,
         },
         status: 1,
       }),
