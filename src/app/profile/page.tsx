@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getAdminById, updateAdminById } from "../service/service";
 import Loader from "@/components/common/Loader";
 import { Admin } from "@/types/admin";
+import { withAuth } from "../auth/helper/withAuth";
 
 const Profile = () => {
   const adminId = localStorage.getItem("adminId");
@@ -290,4 +291,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default withAuth(Profile);

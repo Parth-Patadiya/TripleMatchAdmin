@@ -1,4 +1,5 @@
 "use client";
+import { withAuth } from "@/app/auth/helper/withAuth";
 import { getUserById } from "@/app/service/service";
 import CardDataStats from "@/components/CardDataStats";
 import CardUserData from "@/components/CardUserData";
@@ -58,7 +59,7 @@ const UserDetails: React.FC = () => {
             />
             <CardDataStats
               title="Login"
-              total={user?.userActivity?.signIn.length?.toString() || "0"}
+              total={user?.userActivity?.signIn?.length?.toString() || "0"}
               deviceData={user?.userActivity?.signIn}
               rate=""
             >
@@ -66,7 +67,7 @@ const UserDetails: React.FC = () => {
             </CardDataStats>
             <CardDataStats
               title="Logout"
-              total={user?.userActivity?.signOut.length?.toString() || "0"}
+              total={user?.userActivity?.signOut?.length?.toString() || "0"}
               deviceData={user?.userActivity?.signOut}
               rate=""
             >
@@ -255,4 +256,4 @@ const UserDetails: React.FC = () => {
   );
 };
 
-export default UserDetails;
+export default withAuth(UserDetails);
