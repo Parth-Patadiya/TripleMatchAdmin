@@ -27,7 +27,10 @@ export async function POST(req) {
           user: {
             name: user.name,
             email: user.email,
-            mobile: user.mobile
+            mobile: user.mobile,
+            coins: user.coins,
+            amountPaid: user.amountPaid,
+            winAmount: user.winAmount
           },
           userActivity: {
             ...user.userActivity,
