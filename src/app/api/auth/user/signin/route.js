@@ -3,7 +3,7 @@ import { comparePasswords, generateToken, getUserByEmail, getUserById, updateUse
 export async function POST(req) {
   try {
     const { email, password, activityType, deviceDetails } = await req.json();
-    
+
     if (!email || !password) {
       return new Response(
         JSON.stringify({ status: 0, message: 'Email and password are required' }),
@@ -63,6 +63,9 @@ export async function POST(req) {
           id: userData._id,
           name: userData.name,
           email: userData.email,
+          coins: user.coins,
+          amountPaid: user.amountPaid,
+          winAmount: user.winAmount
         },
         token,
         userActivity: updatedUserActivity, // Send updated userActivity with the incremented signinCount
