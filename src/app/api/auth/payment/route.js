@@ -2,7 +2,7 @@ import { getUserById, updateUserById } from "../../../../../lib/auth"; // Functi
 
 export async function POST(req) {
   try {
-    const { userId, amount, coins } = await req.json();
+    const { userId, amount, coins, winAmount } = await req.json();
 
     // Validate `userId`
     if (!userId) {
@@ -39,7 +39,20 @@ export async function POST(req) {
           { status: 400, headers: { 'Content-Type': 'application/json' } }
         );
       }
-      updatedData.amountPaid = (user.amountPaid || 0) + amount; // Increment the current value
+      updatedData.amountPaid = amount || 0; // Increment the current value
+    }
+
+    if (winAmount != null) {
+      if (winAmount <= 0) {
+        return new Response(
+          JSON.stringify({
+            message: 'Win Amount must be a positive value',
+            status: 0,
+          }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+      updatedData.winAmount = winAmount || 0; // Increment the current value
     }
 
     if (coins != null) {
@@ -52,7 +65,7 @@ export async function POST(req) {
           { status: 400, headers: { 'Content-Type': 'application/json' } }
         );
       }
-      updatedData.coins = (user.coins || 0) + coins; // Increment the current value
+      updatedData.coins = coins || 0; // Increment the current value
     }
 
     // Update the user's data
