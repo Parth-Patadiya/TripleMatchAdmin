@@ -60,6 +60,7 @@ export async function POST(req) {
       JSON.stringify({
         message: 'Login successful',
         user: {
+          id: userData._id,
           name: userData.name,
           email: userData.email,
         },
