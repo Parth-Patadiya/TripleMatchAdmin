@@ -1,6 +1,27 @@
 import { createVoucher } from '../../../../../../lib/auth';
 import fs from 'fs/promises';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid'; // Install this with `npm install uuid`
+
+async function saveImage(imageFile) {
+  const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  
+  if (!validImageTypes.includes(imageFile.type)) {
+    throw new Error('Invalid image type');
+  }
+
+  const fileExtension = path.extname(imageFile.name);
+  const uniqueFileName = `${uuidv4()}${fileExtension}`;
+
+  const uploadDir = path.resolve('./public/images/vouchers');
+  await fs.mkdir(uploadDir, { recursive: true });
+
+  const imagePath = path.join(uploadDir, uniqueFileName);
+  const imageBuffer = await imageFile.arrayBuffer();
+  await fs.writeFile(imagePath, Buffer.from(imageBuffer));
+
+  return `/images/vouchers/${uniqueFileName}`;
+}
 
 export async function POST(req) {
   try {
@@ -28,27 +49,12 @@ export async function POST(req) {
       );
     }
 
-    // Validate file type (optional)
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!validImageTypes.includes(imageFile.type)) {
-      return new Response(
-        JSON.stringify({ status: 0, message: 'Invalid image type' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+    // Save the image file and get the image URL
+    const imageURL = await saveImage(imageFile);
 
-    // Ensure unique file name
-    const uniqueName = `${Date.now()}-${imageFile.name}`;
-    const uploadDir = path.resolve('./public/images/vouchers'); // Adjust path as needed
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    const imagePath = path.join(uploadDir, uniqueName);
-    const imageBuffer = await imageFile.arrayBuffer();
-    await fs.writeFile(imagePath, Buffer.from(imageBuffer));
-
-    // Save voucher in the database
-    const imageURL = `/images/vouchers/${uniqueName}`;
     const userReqData = [title, description, imageURL, validTill, amount];
+
+    // Save the voucher in the database
     await createVoucher(...userReqData);
 
     return new Response(
@@ -60,9 +66,9 @@ export async function POST(req) {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.message);
     return new Response(
-      JSON.stringify({ status: 0, message: 'Internal server error' }),
+      JSON.stringify({ status: 0, message: error.message || 'Internal server error' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

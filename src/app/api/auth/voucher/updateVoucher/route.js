@@ -2,6 +2,7 @@ import { updateVoucher } from '../../../../../../lib/auth';
 import { getVoucherById } from '../../../../../../lib/auth';
 import fs from 'fs/promises';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid'; // Install this package using `npm install uuid`
 
 export async function POST(req) {
   try {
@@ -36,11 +37,27 @@ export async function POST(req) {
     let imagePath = existingVoucher.image; // Retain the existing image path
 
     if (imageFile && typeof imageFile !== 'string') {
-      // Save the new image locally if provided
+      // Delete the old image if a new one is uploaded
+      if (existingVoucher.image) {
+        try {
+          
+          const oldImagePath = path.resolve('./public' + existingVoucher.image);
+          console.log(oldImagePath);
+          await fs.unlink(oldImagePath); // Delete the old image
+        } catch (error) {
+          console.error('Error deleting old image:', error);
+        }
+      }
+
+      // Save the new image locally with a unique name
       const uploadDir = path.resolve('./public/images/vouchers'); // Ensure 'uploads' directory exists
       await fs.mkdir(uploadDir, { recursive: true });
 
-      imagePath = path.join(uploadDir, imageFile.name);
+      // Generate a unique name for the image
+      const fileExtension = path.extname(imageFile.name); // Get the file extension (e.g., .jpg, .png)
+      const uniqueFileName = `${uuidv4()}${fileExtension}`; // Create a unique file name using UUID
+      imagePath = path.join(uploadDir, uniqueFileName);
+
       const imageBuffer = await imageFile.arrayBuffer();
       await fs.writeFile(imagePath, Buffer.from(imageBuffer));
     }
@@ -49,7 +66,7 @@ export async function POST(req) {
     const updateData = {
       title: title || existingVoucher.title,
       description: description || existingVoucher.description,
-      image: imageFile ? `/images/vouchers/${imageFile.name}` : imagePath,
+      image: imageFile ? `/images/vouchers/${path.basename(imagePath)}` : imagePath,
       validTill: validTill || existingVoucher.validTill,
       amount: amount || existingVoucher.amount,
       updatedAt: new Date(), // Add the updatedAt field
