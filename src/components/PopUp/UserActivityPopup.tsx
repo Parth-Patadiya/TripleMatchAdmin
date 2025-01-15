@@ -139,7 +139,7 @@ const UserActivityPopup: FC<UserActivityPopupProps> = ({
           </table>
           {deviceData && deviceData.length === 0 && (
             <div className="flex w-full justify-center p-10">
-              No Activity Found
+              No Details Found
             </div>
           )}
         </div>

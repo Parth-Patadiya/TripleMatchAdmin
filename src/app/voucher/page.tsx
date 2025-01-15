@@ -69,6 +69,20 @@ const Voucher = () => {
       image && formData.set("image", image);
       const data = await createVoucher(formData); // Pass page and limit to API
       if (data && data.status === 1) {
+        setFormValues({
+          title: "",
+          des: "",
+          validTill: "",
+          amount: "",
+        });
+        setErrors({
+          title: "",
+          des: "",
+          validTill: "",
+          amount: "",
+        });
+        setImage(null);
+        setUpdatedImage("");
         setReload(true);
         closeModal();
       } else {
@@ -97,7 +111,7 @@ const Voucher = () => {
           className="mb-4 flex w-full cursor-pointer items-center justify-center rounded-lg border border-primary bg-primary p-4 text-sm font-medium text-white transition hover:bg-opacity-90 sm:w-50"
         >
           <AddOutlined style={{ fontSize: 24 }} />
-          Add Coupon
+          Add Voucher
         </button>
       </div>
       <VoucherTable load={reload} />

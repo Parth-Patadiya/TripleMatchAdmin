@@ -5,4 +5,7 @@ export interface User {
   mobile: string;
   password: string;
   role: string;
+  amountPaid: number;
+  coins: number;
+  winAmount: number;
 }

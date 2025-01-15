@@ -11,7 +11,9 @@ import {
   GppBadOutlined,
   LoginOutlined,
   LogoutOutlined,
+  PaidOutlined,
   RestartAltOutlined,
+  SportsGolfOutlined,
 } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 
@@ -72,6 +74,32 @@ const UserDetails: React.FC = () => {
               rate=""
             >
               <LogoutOutlined />
+            </CardDataStats>
+          </div>
+          <div className=" mt-4 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <CardDataStats
+              title="Coins"
+              total={user?.user?.coins?.toString().toString() || "0"}
+              deviceData={[]}
+              rate=""
+            >
+              <SportsGolfOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="AmountPaid"
+              total={user?.user?.amountPaid?.toString() || "0"}
+              deviceData={[]}
+              rate=""
+            >
+              <PaidOutlined />
+            </CardDataStats>
+            <CardDataStats
+              title="AmountWin"
+              total={user?.user?.winAmount?.toString() || "0"}
+              deviceData={[]}
+              rate=""
+            >
+              <PaidOutlined />
             </CardDataStats>
           </div>
           <h2 className="my-4 text-xl font-bold text-black dark:text-white">

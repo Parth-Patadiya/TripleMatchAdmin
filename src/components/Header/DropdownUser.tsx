@@ -16,6 +16,7 @@ const DropdownUser = () => {
     localStorage.removeItem("adminId");
     localStorage.removeItem("adminEmail");
     localStorage.removeItem("adminName");
+    localStorage.removeItem("userDId");
     router.push("/auth/signin"); // Redirect to sign-in page
   };
 

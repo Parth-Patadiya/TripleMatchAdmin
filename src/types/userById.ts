@@ -148,6 +148,9 @@ interface User {
   name: string;
   email: string;
   mobile: string;
+  amountPaid: number;
+  coins: number;
+  winAmount: number;
 }
 
 export interface LoginResponse {

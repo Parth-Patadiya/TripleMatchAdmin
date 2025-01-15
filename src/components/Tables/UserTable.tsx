@@ -223,7 +223,7 @@ const UserTable = () => {
                       <h5 className="font-medium text-black dark:text-white">
                         {user.name}
                       </h5>
-                      <p className="text-sm">$ 0</p>
+                      <p className="text-sm">{user?.coins | 0}</p>
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <p className="text-black dark:text-white">{user.email}</p>
