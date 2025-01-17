@@ -1,5 +1,19 @@
 import { getUserById } from '../../../../../../lib/auth';
 
+function reverseArrays(obj) {
+  if (Array.isArray(obj)) {
+    return obj.reverse(); // Reverse the array
+  } else if (typeof obj === "object" && obj !== null) {
+    // Iterate over keys in the object
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        obj[key] = reverseArrays(obj[key]); // Recursively reverse arrays in nested objects
+      }
+    }
+  }
+  return obj; // Return the updated object
+}
+
 export async function POST(req) {
   try {
     const { userId } = await req.json();
@@ -32,9 +46,7 @@ export async function POST(req) {
             amountPaid: user.amountPaid,
             winAmount: user.winAmount
           },
-          userActivity: {
-            ...user.userActivity,
-          },
+          userActivity: reverseArrays({...user.userActivity}),
           status: 1
         }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }

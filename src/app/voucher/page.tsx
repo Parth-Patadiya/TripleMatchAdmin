@@ -96,6 +96,7 @@ const Voucher = () => {
   };
 
   const openModal = () => {
+    setReload(false);
     setIsModalOpen(true);
   };
 

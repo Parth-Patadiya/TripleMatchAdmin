@@ -1,3 +1,4 @@
+import { CloseOutlined } from "@mui/icons-material";
 import { FC, useEffect, useRef } from "react";
 
 interface Device {
@@ -26,18 +27,14 @@ const UserActivityPopup: FC<UserActivityPopupProps> = ({
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-
-    // Define the options for formatting the date and time
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
       month: "short",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      hour12: true, // To use 12-hour format
+      hour12: true,
     };
-
-    // Use Intl.DateTimeFormat to format the date
     return new Intl.DateTimeFormat("en-GB", options).format(date);
   };
 
@@ -70,14 +67,21 @@ const UserActivityPopup: FC<UserActivityPopupProps> = ({
         ref={popupRef}
         className="z-9999 h-[80%] w-[90%] rounded-sm border border-stroke bg-white px-2 py-2 shadow-default dark:border-strokedark dark:bg-boxdark lg:w-[80%]"
       >
-        <div className="flex justify-between px-4 py-4">
+        <div className="flex items-center justify-between px-4 py-4">
           <h4 className="text-xl font-semibold text-black dark:text-white">
             {title} Activity
           </h4>
+          <button
+            onClick={onClose}
+            className="text-black dark:text-white"
+            aria-label="Close"
+          >
+            <CloseOutlined />
+          </button>
         </div>
-        <div className="h-[90%] max-w-full  overflow-x-auto  overflow-y-auto">
+        <div className="h-[90%] max-w-full overflow-x-auto overflow-y-auto">
           <table className="w-full table-auto">
-            <thead>
+            <thead className="sticky top-0">
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white">
                   Device Name
@@ -99,7 +103,7 @@ const UserActivityPopup: FC<UserActivityPopupProps> = ({
                 </th>
               </tr>
             </thead>
-            <tbody className="">
+            <tbody>
               {deviceData &&
                 deviceData.map((device, key) => (
                   <tr key={key}>
