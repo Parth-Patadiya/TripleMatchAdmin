@@ -40,9 +40,7 @@ export async function POST(req) {
       // Delete the old image if a new one is uploaded
       if (existingVoucher.image) {
         try {
-          
           const oldImagePath = path.resolve('./public' + existingVoucher.image);
-          console.log(oldImagePath);
           await fs.unlink(oldImagePath); // Delete the old image
         } catch (error) {
           console.error('Error deleting old image:', error);
