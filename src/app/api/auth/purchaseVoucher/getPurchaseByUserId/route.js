@@ -2,7 +2,17 @@ import { getPurchaseByUserId, getUserById } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
-    const { userId } = await req.json();
+    const { userId, itemsPerPage = 10, pageNumber = 1, searchQuery = "", status } = await req.json();
+
+    if (status !== "Active" && status !== "Pending") {
+      return new Response(
+        JSON.stringify({
+          status: 0,
+          message:'Status must be Active or Pending',
+        }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Validate required fields
     if (!userId) {
@@ -15,8 +25,8 @@ export async function POST(req) {
       );
     }
 
+    // Fetch user details once
     const user = await getUserById(userId);
-    
     if (!user.success) {
       return new Response(
         JSON.stringify({ status: 0, message: 'No User Found' }),
@@ -24,8 +34,8 @@ export async function POST(req) {
       );
     }
 
-    // Retrieve purchase history by userId
-    const purchaseHistory = await getPurchaseByUserId(userId);
+    // Retrieve purchase history by userId with pagination and search
+    const purchaseHistory = await getPurchaseByUserId(userId, itemsPerPage, pageNumber, searchQuery, status);
 
     if (!purchaseHistory.success) {
       return new Response(
@@ -37,17 +47,28 @@ export async function POST(req) {
       );
     }
 
+    // Add user details once to the response
+    const responseData = {
+      user: {
+        userId:userId,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+      },
+      purchases: purchaseHistory.data,
+      pagination: purchaseHistory.pagination,
+    };
+
     return new Response(
       JSON.stringify({
         status: 1,
         message: 'Purchase history retrieved successfully.',
-        data: purchaseHistory.data,
+        data: responseData,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error retrieving purchase history:', error);
-
     return new Response(
       JSON.stringify({
         status: 0,

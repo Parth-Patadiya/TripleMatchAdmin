@@ -2,7 +2,7 @@ import { getVoucherById, purchaseVouchers } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
-    const { userId, voucherIds } = await req.json();
+    const { userId, voucherIds, deviceDetails } = await req.json();
 
     if (!userId || !voucherIds || !Array.isArray(voucherIds) || voucherIds.length === 0) {
       return new Response(
@@ -13,6 +13,15 @@ export async function POST(req) {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    const newSignOutActivity = {
+      deviceName: deviceDetails.deviceName,
+      deviceModel: deviceDetails.deviceModel,
+      operatingSystem: deviceDetails.operatingSystem,
+      processorType: deviceDetails.processorType,
+      appVersion: deviceDetails.appVersion,
+      date: Date.now(), // Add current date and time
+    };
 
     // Validate and retrieve voucher details
     const voucherDetails = [];
@@ -31,7 +40,7 @@ export async function POST(req) {
     }
 
     // Save the purchase in the database
-    const purchaseResult = await purchaseVouchers(userId, voucherDetails);
+    const purchaseResult = await purchaseVouchers(userId, voucherIds, newSignOutActivity);
 
     if (!purchaseResult.success) {
       throw new Error('Failed to process purchase');

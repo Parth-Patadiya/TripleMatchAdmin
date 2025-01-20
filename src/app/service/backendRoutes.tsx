@@ -18,3 +18,9 @@ export const addVoucherRoute = BaseURL + "voucher/createVoucher";
 export const getAllVoucherRoute = BaseURL + "voucher/getAllVouchersByPageNo";
 export const updateVoucherRoute = BaseURL + "voucher/updateVoucher";
 export const deleteVoucherRoute = BaseURL + "voucher/deleteVoucher";
+export const getAllVoucherRequestRoute =
+  BaseURL + "purchaseVoucher/getAllPurchaseRequest";
+export const getAllVoucherRequestByUserIdRoute =
+  BaseURL + "purchaseVoucher/getPurchaseByUserId";
+export const updateVoucherRequestByUserIdRoute =
+  BaseURL + "purchaseVoucher/updatePurchaseStatus";

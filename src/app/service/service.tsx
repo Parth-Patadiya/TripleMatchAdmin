@@ -7,9 +7,12 @@ import {
   forgotUserPasswordRoute,
   getAdminByIdRoute,
   getAllUserRoute,
+  getAllVoucherRequestByUserIdRoute,
+  getAllVoucherRequestRoute,
   getAllVoucherRoute,
   getUserByIDRoute,
   updateAdminByIdRoute,
+  updateVoucherRequestByUserIdRoute,
   updateVoucherRoute,
   validateTokenRoute,
 } from "./backendRoutes";
@@ -249,6 +252,82 @@ export const deleteVoucherById = async (voucherId: string) => {
     return data;
   } catch (error) {
     console.error("deleteUserById" + " Error" + error);
+  }
+  return null;
+};
+
+export const getAllVoucherRequest = async (
+  status: string,
+  pageNumber: number,
+  searchQuery: string,
+) => {
+  try {
+    const response = await fetch(getAllVoucherRequestRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pageNumber,
+        searchQuery,
+        status,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("createVoucher" + " Error" + error);
+  }
+  return null;
+};
+
+export const getAllVoucherRequestByUserId = async (
+  status: string,
+  userId: string,
+  pageNumber: number,
+  searchQuery: string,
+) => {
+  try {
+    const response = await fetch(getAllVoucherRequestByUserIdRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status,
+        userId,
+        pageNumber,
+        searchQuery,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("createVoucher" + " Error" + error);
+  }
+  return null;
+};
+
+export const updateVoucherRequestByUserId = async (
+  userId: string,
+  purchaseId: string,
+) => {
+  try {
+    const response = await fetch(updateVoucherRequestByUserIdRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        purchaseId,
+        newStatus: "Active",
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("createVoucher" + " Error" + error);
   }
   return null;
 };

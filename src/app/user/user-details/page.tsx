@@ -5,6 +5,7 @@ import CardDataStats from "@/components/CardDataStats";
 import CardUserData from "@/components/CardUserData";
 import Loader from "@/components/common/Loader";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import Tabs from "@/components/Tabs/Tabs";
 import { LoginResponse } from "@/types/userById";
 import {
   EmojiEventsOutlined,
@@ -267,6 +268,10 @@ const UserDetails: React.FC = () => {
               <RestartAltOutlined />
             </CardDataStats>
           </div>
+          <h2 className="my-4 text-lg font-bold text-black dark:text-white">
+            Voucher Request
+          </h2>
+          <Tabs by={"ID"} />
 
           {/* <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
             <ChartOne />

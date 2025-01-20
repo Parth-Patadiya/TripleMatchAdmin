@@ -2,15 +2,22 @@ import { getAllPurchaseRequest, getUserById } from '../../../../../../lib/auth';
 
 export async function POST(req) {
   try {
-    const {
-      itemsPerPage = 10,
-      pageNumber = 1,
-      searchQuery = "",
-    } = await req.json();
+    // Extract itemsPerPage, pageNumber, and searchQuery from the request body
+    const { itemsPerPage = 10, pageNumber = 1, searchQuery = "", status } = await req.json();
+    
+    if (status !== "Active" && status !== "Pending") {
+      return new Response(
+        JSON.stringify({
+          status: 0,
+          message:'Status must be Active or Pending',
+        }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
-    // Retrieve all purchase histories with search and pagination
-    const getAllRequest = await getAllPurchaseRequest(itemsPerPage, pageNumber, searchQuery);
-
+    // Retrieve all purchase histories with pagination and search query
+    const getAllRequest = await getAllPurchaseRequest(status);
+    
     if (!getAllRequest.success) {
       return new Response(
         JSON.stringify({
@@ -21,42 +28,75 @@ export async function POST(req) {
       );
     }
 
-    // Filter out purchases with status "Active"
+    // Handle the case where no data is found
+    if (getAllRequest.data.length === 0) {
+      return new Response(
+        JSON.stringify({
+          status: 1,
+          message: 'No purchase histories found.',
+          data: [],
+          pagination: getAllRequest.pagination,
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Filter out "Active" purchases, ensuring purchases is defined and an array
     const filteredPurchases = getAllRequest.data.map((history) => {
-      // Filter out "Active" purchases in each user's purchase list
       const filteredPurchaseHistory = {
         ...history,
-        purchases: history.purchases.filter(purchase => purchase.status !== "Active"),
       };
-
       return filteredPurchaseHistory;
     });
 
-    // Filter out histories with empty purchase arrays
-    const nonEmptyHistories = filteredPurchases.filter(history => history.purchases.length > 0);
-
-    // Fetch userName for each purchase history only if there are purchases
-    const purchaseRequestWithUserName = await Promise.all(
-      nonEmptyHistories.map(async (history) => {
+    // Fetch user details (userName, email, mobile) for each purchase history asynchronously
+    let purchaseRequestWithUserName = await Promise.all(
+      filteredPurchases.map(async (history) => {
         const user = await getUserById(history.userId);
-        const userName = user.success ? user.name : 'Unknown User';
+        const name = user.success ? user.name : 'Unknown User';
         const email = user.success ? user.email : '';
         const mobile = user.success ? user.mobile : '';
         return {
-          userName,
+          name,
           email,
           mobile,
-          ...history,
+          ...history, // Merge user details with the purchase history
         };
       })
     );
 
+    // Apply search on the `purchaseRequestWithUserName` data
+    if (searchQuery && searchQuery.trim() !== "") {
+      const lowercasedSearchQuery = searchQuery.toLowerCase();
+      purchaseRequestWithUserName = purchaseRequestWithUserName.filter((history) => {
+        return (
+          history.name.toLowerCase().includes(lowercasedSearchQuery) ||
+          history.email.toLowerCase().includes(lowercasedSearchQuery) ||
+          history.mobile.toLowerCase().includes(lowercasedSearchQuery) ||
+          history.title.toLowerCase().includes(lowercasedSearchQuery) ||
+          history.purchaseId.toLowerCase().includes(lowercasedSearchQuery)
+        );
+      });
+    }
+
+    // Update pagination based on the filtered data
+    const totalRecords = purchaseRequestWithUserName.length;
+    const totalPages = Math.ceil(totalRecords / itemsPerPage);
+    const skip = (pageNumber - 1) * itemsPerPage;
+    const paginatedData = purchaseRequestWithUserName.slice(skip, skip + itemsPerPage);
+
+    // Respond with the filtered and enriched purchase histories and updated pagination info
     return new Response(
       JSON.stringify({
         status: 1,
         message: 'All purchase histories retrieved successfully.',
-        data: purchaseRequestWithUserName,
-        pagination: getAllRequest.pagination,
+        data: paginatedData,
+        pagination: {
+          totalRecords, // Total number of filtered records
+          itemsPerPage,
+          currentPage: pageNumber,
+          totalPages, // Total pages based on filtered data
+        },
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
