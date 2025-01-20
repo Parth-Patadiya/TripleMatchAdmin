@@ -13,14 +13,14 @@ async function saveImage(imageFile) {
   const fileExtension = path.extname(imageFile.name);
   const uniqueFileName = `${uuidv4()}${fileExtension}`;
 
-  const uploadDir = path.resolve('./public/images/vouchers');
+  const uploadDir = path.resolve('/tmp');
   await fs.mkdir(uploadDir, { recursive: true });
 
   const imagePath = path.join(uploadDir, uniqueFileName);
   const imageBuffer = await imageFile.arrayBuffer();
   await fs.writeFile(imagePath, Buffer.from(imageBuffer));
 
-  return `/images/vouchers/${uniqueFileName}`;
+  return `/tmp/${uniqueFileName}`;
 }
 
 export async function POST(req) {

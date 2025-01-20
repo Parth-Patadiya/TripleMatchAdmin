@@ -28,7 +28,7 @@ export async function POST(req) {
 
     // Delete the associated image if it exists
     if (existingVoucher.image) {
-      const imagePath = path.resolve(`./public${existingVoucher.image}`);
+      const imagePath = path.resolve(`/tmp${existingVoucher.image}`);
 
       try {
         await fs.unlink(imagePath); // Delete the image file
