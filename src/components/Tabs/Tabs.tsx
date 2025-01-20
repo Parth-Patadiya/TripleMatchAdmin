@@ -14,14 +14,14 @@ const Tabs: React.FC<show> = ({ by }) => {
   const [activeTab, setActiveTab] = useState<string>("Pending");
 
   return (
-    <div className="rounded-lg bg-white shadow">
-      <div className="flex border-b">
+    <div className="rounded-lg bg-white shadow dark:bg-boxdark">
+      <div className="flex">
         {tabs.map((tab) => (
           <button
             key={tab.status}
-            className={`px-6 py-4 text-gray-600 hover:text-blue-600 focus:outline-none ${
+            className={`px-6 py-4 font-medium text-black hover:text-blue-600 focus:outline-none dark:text-white ${
               activeTab === tab.status
-                ? "border-b-2 border-blue-600 text-blue-600"
+                ? "border-b-4  border-blue-600 text-blue-600"
                 : ""
             }`}
             onClick={() => setActiveTab(tab.status)}
