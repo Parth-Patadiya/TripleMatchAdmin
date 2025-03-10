@@ -51,9 +51,9 @@ export async function POST(req) {
     const responseData = {
       user: {
         userId:userId,
-        name: user.name,
+        // name: user.name,
         email: user.email,
-        mobile: user.mobile,
+        // mobile: user.mobile,
       },
       purchases: purchaseHistory.data,
       pagination: purchaseHistory.pagination,

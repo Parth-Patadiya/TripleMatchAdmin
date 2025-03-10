@@ -2,10 +2,8 @@ import { hashPassword, createUser, generateToken, getUserByEmail } from '../../.
 
 export async function POST(req) {
   try {
-    // const { name, email, mobile, password, role } = await req.json();
     const { email, password, role } = await req.json();
 
-    // if (!email || !password || !mobile) {
       if (!email || !password ) {
       return new Response(
         JSON.stringify({ status: 0, message: 'Email, Password, Mobile are required' }),
@@ -31,11 +29,9 @@ export async function POST(req) {
     const hashedPassword = await hashPassword(password);
     
     // Create new User
-    // const userReqData = [name, email, mobile, hashedPassword, role];
     const userReqData = [email, hashedPassword, role];
     await createUser(...userReqData);
 
-    // const resData = {name:name, email:email, mobile:mobile, role:role}
     const resData = { email:email, role:role }
     
     // Generate JWT token

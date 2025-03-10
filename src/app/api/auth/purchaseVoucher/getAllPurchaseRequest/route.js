@@ -53,13 +53,13 @@ export async function POST(req) {
     let purchaseRequestWithUserName = await Promise.all(
       filteredPurchases.map(async (history) => {
         const user = await getUserById(history.userId);
-        const name = user.success ? user.name : 'Unknown User';
+        // const name = user.success ? user.name : 'Unknown User';
         const email = user.success ? user.email : '';
-        const mobile = user.success ? user.mobile : '';
+        // const mobile = user.success ? user.mobile : '';
         return {
-          name,
+          // name,
           email,
-          mobile,
+          // mobile,
           ...history, // Merge user details with the purchase history
         };
       })
@@ -70,9 +70,9 @@ export async function POST(req) {
       const lowercasedSearchQuery = searchQuery.toLowerCase();
       purchaseRequestWithUserName = purchaseRequestWithUserName.filter((history) => {
         return (
-          history.name.toLowerCase().includes(lowercasedSearchQuery) ||
+          // history.name.toLowerCase().includes(lowercasedSearchQuery) ||
           history.email.toLowerCase().includes(lowercasedSearchQuery) ||
-          history.mobile.toLowerCase().includes(lowercasedSearchQuery) ||
+          // history.mobile.toLowerCase().includes(lowercasedSearchQuery) ||
           history.title.toLowerCase().includes(lowercasedSearchQuery) ||
           history.purchaseId.toLowerCase().includes(lowercasedSearchQuery)
         );

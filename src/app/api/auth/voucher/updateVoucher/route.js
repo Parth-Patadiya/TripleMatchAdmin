@@ -40,7 +40,7 @@ export async function POST(req) {
       // Delete the old image if a new one is uploaded
       if (existingVoucher.image) {
         try {
-          const oldImagePath = path.resolve('/tmp' + existingVoucher.image);
+          const oldImagePath = path.resolve('./public' + existingVoucher.image);
           await fs.unlink(oldImagePath); // Delete the old image
         } catch (error) {
           console.error('Error deleting old image:', error);
@@ -48,7 +48,7 @@ export async function POST(req) {
       }
 
       // Save the new image locally with a unique name
-      const uploadDir = path.resolve('/tmp'); // Ensure 'uploads' directory exists
+      const uploadDir = path.resolve('./public/images/vouchers'); // Ensure 'uploads' directory exists
       await fs.mkdir(uploadDir, { recursive: true });
 
       // Generate a unique name for the image
@@ -64,7 +64,7 @@ export async function POST(req) {
     const updateData = {
       title: title || existingVoucher.title,
       description: description || existingVoucher.description,
-      image: imageFile ? `/tmp/${path.basename(imagePath)}` : imagePath,
+      image: imageFile ? `/images/vouchers/${path.basename(imagePath)}` : imagePath,
       validTill: validTill || existingVoucher.validTill,
       amount: amount || existingVoucher.amount,
       updatedAt: new Date(), // Add the updatedAt field
