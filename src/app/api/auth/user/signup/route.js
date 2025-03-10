@@ -30,8 +30,9 @@ export async function POST(req) {
     
     // Create new User
     const userReqData = [email, hashedPassword, role];
-    await createUser(...userReqData);
-
+    const res = await createUser(...userReqData);
+    console.log(res);
+    
     const resData = { email:email, role:role }
     
     // Generate JWT token
