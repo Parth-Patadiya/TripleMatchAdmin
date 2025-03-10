@@ -39,9 +39,9 @@ export async function POST(req) {
           message: 'User Found Successfull',
           id: userId,
           user: {
-            name: user.name,
+            // name: user.name,
             email: user.email,
-            mobile: user.mobile,
+            // mobile: user.mobile,
             coins: user.coins,
             amountPaid: user.amountPaid,
             winAmount: user.winAmount

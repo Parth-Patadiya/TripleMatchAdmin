@@ -61,7 +61,7 @@ export async function POST(req) {
         message: 'Login successful',
         user: {
           id: userData._id,
-          name: userData.name,
+          // name: userData.name,
           email: userData.email,
           coins: user.coins,
           amountPaid: user.amountPaid,

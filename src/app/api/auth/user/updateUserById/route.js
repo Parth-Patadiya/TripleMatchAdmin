@@ -2,7 +2,8 @@ import { hashPassword, updateUserById } from "../../../../../../lib/auth";
 
 export async function POST(req) {
   try {
-    const { userId, name, email, mobile, password } = await req.json();
+    // const { userId, name, email, mobile, password } = await req.json();
+    const { userId, email, password } = await req.json();
 
     if (!userId) {
       return new Response(
@@ -16,9 +17,9 @@ export async function POST(req) {
 
     // Prepare the data to be updated
     const updateData = {};
-    if (name) updateData.name = name;
+    // if (name) updateData.name = name;
     if (email) updateData.email = email;
-    if (mobile) updateData.mobile = mobile;
+    // if (mobile) updateData.mobile = mobile;
     if (password) {
       updateData.password = await hashPassword(password); // Ensure the password is hashed properly
     }
