@@ -30,7 +30,7 @@ export async function POST(req) {
     // Prepare the updated values
     const updatedData = {};
     if (amount != null) {
-      if (amount <= 0) {
+      if (amount < 0) {
         return new Response(
           JSON.stringify({
             message: 'Amount must be a positive value',
@@ -43,7 +43,7 @@ export async function POST(req) {
     }
 
     if (winAmount != null) {
-      if (winAmount <= 0) {
+      if (winAmount < 0) {
         return new Response(
           JSON.stringify({
             message: 'Win Amount must be a positive value',
@@ -56,7 +56,7 @@ export async function POST(req) {
     }
 
     if (coins != null) {
-      if (coins <= 0) {
+      if (coins < 0) {
         return new Response(
           JSON.stringify({
             message: 'Coins must be a positive value',
