@@ -194,14 +194,14 @@ const UserTable = () => {
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
-                  Name
-                </th>
-                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
                   Email
                 </th>
-                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                {/* <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Email
+                </th> */}
+                {/* <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
                   Mobile
-                </th>
+                </th> */}
                 <th className="px-4 py-4 font-medium text-black dark:text-white">
                   Actions
                 </th>
@@ -221,18 +221,18 @@ const UserTable = () => {
                   <tr key={key}>
                     <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
-                        {user.name}
+                        {user.email}
                       </h5>
                       <p className="text-sm">{user?.coins | 0}</p>
                     </td>
-                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    {/* <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <p className="text-black dark:text-white">{user.email}</p>
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <p className="text-black dark:text-white">
                         {user.mobile}
                       </p>
-                    </td>
+                    </td> */}
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button

@@ -45,7 +45,7 @@ interface UserActivity {
     }>;
   };
   playForReal: {
-    easy: {
+    good: {
       win: Array<{
         level: string;
         result: string;
@@ -77,7 +77,7 @@ interface UserActivity {
         date: string;
       }>;
     };
-    medium: {
+    rare: {
       win: Array<{
         level: string;
         result: string;
@@ -109,7 +109,7 @@ interface UserActivity {
         date: string;
       }>;
     };
-    hard: {
+    epic: {
       win: Array<{
         level: string;
         result: string;
